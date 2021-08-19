@@ -1,0 +1,40 @@
+{
+  "name": "synvert",
+  "description": "write javascript code to change javascript code",
+  "version": "0.1.0",
+  "author": "Richard Huang @flyerhzm",
+  "bin": {
+    "synvert": "./bin/run"
+  },
+  "bugs": "https://github.com/xinminlabs/synvert-javascript/issues",
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.26.0"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/src"
+  ],
+  "homepage": "https://github.com/xinminlabs/synvert-javascript",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "ISC",
+  "main": "src/index.js",
+  "oclif": {
+    "bin": "synvert"
+  },
+  "repository": "xinminlabs/synvert-javascript",
+  "scripts": {
+    "prepack": "oclif-dev readme",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md"
+  },
+  "dependencies": {
+    "@oclif/command": "^1.8.0",
+    "@oclif/config": "^1.17.0",
+    "@oclif/plugin-help": "^3.2.3"
+  }
+}
