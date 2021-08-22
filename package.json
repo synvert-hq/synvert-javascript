@@ -4,7 +4,7 @@
   "version": "0.2.0",
   "author": "Richard Huang",
   "bin": {
-    "synvert": "./bin/run"
+    "synvert-javascript": "./bin/run"
   },
   "bugs": "https://github.com/xinminlabs/synvert-javascript/issues",
   "devDependencies": {
@@ -19,12 +19,13 @@
   ],
   "homepage": "https://github.com/xinminlabs/synvert-javascript",
   "keywords": [
-    "oclif"
+    "ast",
+    "rewrite"
   ],
   "license": "ISC",
   "main": "src/index.js",
   "oclif": {
-    "bin": "synvert"
+    "bin": "synvert-javascript"
   },
   "repository": "xinminlabs/synvert-javascript",
   "scripts": {
