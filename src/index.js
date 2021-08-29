@@ -17,6 +17,10 @@ class SynvertCommand extends Command {
       this.loadSnippets()
       return this.listSnippets()
     }
+    if (flags.show) {
+      this.loadSnippets()
+      return this.showSnippet(flags.show)
+    }
     if (flags.run) {
       this.loadSnippets()
       return this.runSnippet(flags.run)
@@ -45,6 +49,15 @@ class SynvertCommand extends Command {
     })
   }
 
+  showSnippet(snippetName) {
+    const filePath = path.join(this.snippetsHome(), 'lib', `${snippetName}.js`)
+    try {
+      console.log(fs.readFileSync(filePath, 'utf-8'))
+    } catch {
+      console.log(`snippet ${snippetName} not found`)
+    }
+  }
+
   runSnippet(snippetName) {
     console.log(`===== ${snippetName} started =====`)
     const [group, name] = snippetName.split('/')
@@ -71,6 +84,7 @@ SynvertCommand.flags = {
   help: flags.help({char: 'h'}),
   sync: flags.boolean({ description: 'sync snippets' }),
   list: flags.boolean({ char: 'l', description: 'list snippets' }),
+  show: flags.string({ char: 's', description: 'show a snippet' }),
   run: flags.string({ char: 'r', description: 'run a snippet' })
 }
 
