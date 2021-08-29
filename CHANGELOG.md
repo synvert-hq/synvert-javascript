@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.0 (2021-08-29)
+
+* Show a snippet
+
 ## 0.4.0 (2021-08-29)
 
 * Run a snippet
