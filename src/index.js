@@ -11,14 +11,19 @@ class SynvertCommand extends Command {
   async run() {
     const {flags} = this.parse(SynvertCommand)
     if (flags.sync) {
-      return await this.sync()
+      return await this.syncSnippets()
     }
     if (flags.list) {
-      return this.list()
+      this.loadSnippets()
+      return this.listSnippets()
+    }
+    if (flags.run) {
+      this.loadSnippets()
+      return this.runSnippet(flags.run)
     }
   }
 
-  async sync() {
+  async syncSnippets() {
     const snippetsHome = this.snippetsHome()
     try {
       await stat(snippetsHome)
@@ -30,9 +35,7 @@ class SynvertCommand extends Command {
     this.log('snippets are synced')
   }
 
-  list() {
-    const snippetsHome = this.snippetsHome()
-    glob.sync(path.join(snippetsHome, 'lib/**/*.js')).forEach(filePath => eval(fs.readFileSync(filePath, 'utf-8')))
+  listSnippets() {
     const rewriters = Synvert.Rewriter.rewriters
     Object.keys(rewriters).forEach(group => {
       console.log(group)
@@ -40,6 +43,18 @@ class SynvertCommand extends Command {
         console.log(`    ${name}`)
       })
     })
+  }
+
+  runSnippet(snippetName) {
+    console.log(`===== ${snippetName} started =====`)
+    const [group, name] = snippetName.split('/')
+    Synvert.Rewriter.call(group, name)
+    console.log(`===== ${snippetName} done =====`)
+  }
+
+  loadSnippets() {
+    const snippetsHome = this.snippetsHome()
+    glob.sync(path.join(snippetsHome, 'lib/**/*.js')).forEach(filePath => eval(fs.readFileSync(filePath, 'utf-8')))
   }
 
   snippetsHome() {
@@ -54,8 +69,9 @@ SynvertCommand.flags = {
   version: flags.version({char: 'v'}),
   // add --help flag to show CLI version
   help: flags.help({char: 'h'}),
-  sync: flags.boolean({ description: 'sync snippets'}),
-  list: flags.boolean({ char: 'l', description: 'list snippets'}),
+  sync: flags.boolean({ description: 'sync snippets' }),
+  list: flags.boolean({ char: 'l', description: 'list snippets' }),
+  run: flags.string({ char: 'r', description: 'run a snippet' })
 }
 
 module.exports = SynvertCommand
