@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.6.0 (2021-08-30)
+
+* Configure skipFiles and path
+
 ## 0.5.0 (2021-08-29)
 
 * Show a snippet
