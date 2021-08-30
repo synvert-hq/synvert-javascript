@@ -23,7 +23,7 @@ class SynvertCommand extends Command {
     }
     if (flags.run) {
       this.loadSnippets()
-      return this.runSnippet(flags.run)
+      return this.runSnippet(flags.run, flags.path, flags.skipFiles)
     }
   }
 
@@ -58,7 +58,9 @@ class SynvertCommand extends Command {
     }
   }
 
-  runSnippet(snippetName) {
+  runSnippet(snippetName, path, skipFiles) {
+    if (path) Synvert.Configuration.path = path
+    if (skipFiles) Synvert.Configuration.skipFiles = skipFiles.split(',').map(skipFile => skipFile.trim())
     console.log(`===== ${snippetName} started =====`)
     const [group, name] = snippetName.split('/')
     Synvert.Rewriter.call(group, name)
@@ -84,8 +86,10 @@ SynvertCommand.flags = {
   help: flags.help({char: 'h'}),
   sync: flags.boolean({ description: 'sync snippets' }),
   list: flags.boolean({ char: 'l', description: 'list snippets' }),
-  show: flags.string({ char: 's', description: 'show a snippet' }),
-  run: flags.string({ char: 'r', description: 'run a snippet' })
+  show: flags.string({ char: 's', description: 'show a snippet with snippet name' }),
+  run: flags.string({ char: 'r', description: 'run a snippet with snippet name' }),
+  skipFiles: flags.string({ default: 'node_modules/**', dependsOn: ['run'], description: 'skip files, splitted by comma' }),
+  path: flags.string({ default: '.', dependsOn: ['run'], description: 'project path' })
 }
 
 module.exports = SynvertCommand
