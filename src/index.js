@@ -21,6 +21,9 @@ class SynvertCommand extends Command {
       this.loadSnippets()
       return this.showSnippet(flags.show)
     }
+    if (flags.showRunProcess) {
+      Synvert.Configuration.showRunProcess = true
+    }
     if (flags.run) {
       this.loadSnippets()
       return this.runSnippet(flags.run, flags.path, flags.skipFiles)
@@ -88,8 +91,9 @@ SynvertCommand.flags = {
   list: flags.boolean({ char: 'l', description: 'list snippets' }),
   show: flags.string({ char: 's', description: 'show a snippet with snippet name' }),
   run: flags.string({ char: 'r', description: 'run a snippet with snippet name' }),
-  skipFiles: flags.string({ default: 'node_modules/**', dependsOn: ['run'], description: 'skip files, splitted by comma' }),
-  path: flags.string({ default: '.', dependsOn: ['run'], description: 'project path' })
+  showRunProcess: flags.boolean({ default: false, description: 'show processing files when running a snippet' }),
+  skipFiles: flags.string({ default: 'node_modules/**', description: 'skip files, splitted by comma' }),
+  path: flags.string({ default: '.', description: 'project path' })
 }
 
 module.exports = SynvertCommand
