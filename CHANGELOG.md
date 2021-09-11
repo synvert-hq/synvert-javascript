@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.7.0 (2021-09-11)
+
+* Add `showRunProcess` option
+
 ## 0.6.0 (2021-08-30)
 
 * Configure skipFiles and path
