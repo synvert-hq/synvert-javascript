@@ -1,8 +1,8 @@
-const {Command, flags} = require('@oclif/command')
 const { promisify } = require('util');
 const path = require('path')
-const glob = require("glob");
 const fs = require('fs')
+const glob = require("glob");
+const {Command, flags} = require('@oclif/command')
 const stat = promisify(fs.stat)
 const exec = promisify(require('child_process').exec)
 const Synvert = require("synvert-core")
