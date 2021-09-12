@@ -24,6 +24,9 @@ class SynvertCommand extends Command {
     if (flags.showRunProcess) {
       Synvert.Configuration.showRunProcess = true
     }
+    if (flags.enableEcmaFeaturesJsx) {
+      Synvert.Configuration.enableEcmaFeaturesJsx = true
+    }
     if (flags.run) {
       this.loadSnippets()
       return this.runSnippet(flags.run, flags.path, flags.skipFiles)
@@ -92,6 +95,7 @@ SynvertCommand.flags = {
   show: flags.string({ char: 's', description: 'show a snippet with snippet name' }),
   run: flags.string({ char: 'r', description: 'run a snippet with snippet name' }),
   showRunProcess: flags.boolean({ default: false, description: 'show processing files when running a snippet' }),
+  enableEcmaFeaturesJsx: flags.boolean({ default: false, description: 'enable EcmaFeatures jsx' }),
   skipFiles: flags.string({ default: 'node_modules/**', description: 'skip files, splitted by comma' }),
   path: flags.string({ default: '.', description: 'project path' })
 }
