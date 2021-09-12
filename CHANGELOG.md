@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.8.0 (2021-09-12)
+
+* Add `enableEcmaFeaturesJsx` option
+
 ## 0.7.0 (2021-09-11)
 
 * Add `showRunProcess` option
