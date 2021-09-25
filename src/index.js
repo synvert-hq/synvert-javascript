@@ -8,11 +8,14 @@ const fs = require("fs");
 const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
 const Synvert = require("synvert-core");
-const { compare } = require("compare-versions");
+const espree = require("espree");
 
 class SynvertCommand extends Command {
   async run() {
     const { flags } = this.parse(SynvertCommand);
+    if (flags.version) {
+      return this.showVersion();
+    }
     if (flags.sync) {
       return await this.syncSnippets();
     }
@@ -34,6 +37,11 @@ class SynvertCommand extends Command {
       this.loadSnippets();
       return this.runSnippet(flags.run, flags.path, flags.skipFiles);
     }
+  }
+
+  showVersion() {
+    const pjson = require('../package.json');
+    console.log(`${pjson.version} (with synvert-core ${Synvert.version} and espree ${espree.version})`);
   }
 
   async syncSnippets() {
@@ -96,10 +104,9 @@ class SynvertCommand extends Command {
 SynvertCommand.description = `Write javascript code to change javascript code`;
 
 SynvertCommand.flags = {
-  // add --version flag to show CLI version
-  version: flags.version({ char: "v" }),
   // add --help flag to show CLI version
   help: flags.help({ char: "h" }),
+  version: flags.boolean({ char: "v" }),
   sync: flags.boolean({ description: "sync snippets" }),
   list: flags.boolean({ char: "l", description: "list snippets" }),
   show: flags.string({ char: "s", description: "show a snippet with snippet name" }),
