@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.8.1 (2021-09-25)
+
+* Update synvert-core when syncing snippets
+
 ## 0.8.0 (2021-09-12)
 
 * Add `enableEcmaFeaturesJsx` option
