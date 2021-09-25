@@ -1,11 +1,8 @@
 # CHANGELOG
 
-## 0.8.2 (2021-09-25)
+## 0.9.0 (2021-09-25)
 
-* Install synvert-core with option -g
-
-## 0.8.1 (2021-09-25)
-
+* Show version with synvert-core and espree versions
 * Update synvert-core when syncing snippets
 
 ## 0.8.0 (2021-09-12)
