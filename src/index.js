@@ -40,7 +40,7 @@ class SynvertCommand extends Command {
   }
 
   showVersion() {
-    const pjson = require('../package.json');
+    const pjson = require("../package.json");
     console.log(`${pjson.version} (with synvert-core ${Synvert.version} and espree ${espree.version})`);
   }
 
@@ -58,8 +58,8 @@ class SynvertCommand extends Command {
     const response = await fetch("https://registry.npmjs.org/synvert-core/latest");
     const json = await response.json();
     if (compareVersions(json.version, Synvert.version, ">")) {
-      console.log(`synvert-core is updated, installing synvert-core ${json.version}`)
-      await exec("npm install -g synvert-core")
+      console.log(`synvert-core is updated, installing synvert-core ${json.version}`);
+      await exec("npm install -g synvert-core");
     }
   }
 
