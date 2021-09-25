@@ -1,10 +1,10 @@
-const { Command, flags } = require("@oclif/command");
 const { promisify } = require("util");
-const fetch = require("node-fetch");
 const path = require("path");
+const fs = require("fs");
+const { Command, flags } = require("@oclif/command");
+const fetch = require("node-fetch");
 const glob = require("glob");
 const compareVersions = require("compare-versions");
-const fs = require("fs");
 const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
 const Synvert = require("synvert-core");
