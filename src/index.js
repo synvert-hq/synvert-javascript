@@ -1,11 +1,14 @@
 const { Command, flags } = require("@oclif/command");
 const { promisify } = require("util");
+const fetch = require("node-fetch");
 const path = require("path");
 const glob = require("glob");
+const compareVersions = require("compare-versions");
 const fs = require("fs");
 const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
 const Synvert = require("synvert-core");
+const { compare } = require("compare-versions");
 
 class SynvertCommand extends Command {
   async run() {
@@ -43,6 +46,13 @@ class SynvertCommand extends Command {
       await exec(`git clone https://github.com/xinminlabs/synvert-snippets-javascript.git ${snippetsHome}`);
     }
     this.log("snippets are synced");
+
+    const response = await fetch("https://registry.npmjs.org/synvert-core/latest");
+    const json = await response.json();
+    if (compareVersions(json.version, Synvert.version, ">")) {
+      console.log(`synvert-core is updated, installing synvert-core ${json.version}`)
+      await exec("npm install synvert-core")
+    }
   }
 
   listSnippets() {
