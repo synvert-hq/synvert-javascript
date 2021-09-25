@@ -51,7 +51,7 @@ class SynvertCommand extends Command {
     const json = await response.json();
     if (compareVersions(json.version, Synvert.version, ">")) {
       console.log(`synvert-core is updated, installing synvert-core ${json.version}`)
-      await exec("npm install synvert-core")
+      await exec("npm install -g synvert-core")
     }
   }
 
