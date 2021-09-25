@@ -50,8 +50,8 @@ class SynvertCommand extends Command {
     const response = await fetch("https://registry.npmjs.org/synvert-core/latest");
     const json = await response.json();
     if (compareVersions(json.version, Synvert.version, ">")) {
-      console.log(`synvert-core is updated, installing synvert-core ${json.version}`)
-      await exec("npm install synvert-core")
+      console.log(`synvert-core is updated, installing synvert-core ${json.version}`);
+      await exec("npm install synvert-core");
     }
   }
 
