@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.10.1 (2021-09-26)
+
+* Rename `withFiles` to `withinFiles`
+
 ## 0.10.0 (2021-09-26)
 
 * Generate a snippet
