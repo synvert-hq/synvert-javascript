@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.10.0 (2021-09-26)
+
+* Generate a snippet
+
 ## 0.9.0 (2021-09-25)
 
 * Show version with synvert-core and espree versions
