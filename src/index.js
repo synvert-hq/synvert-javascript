@@ -69,12 +69,12 @@ class SynvertCommand extends Command {
 
   listSnippets() {
     const rewriters = Synvert.Rewriter.rewriters;
-    Object.keys(rewriters).forEach((group) => {
+    for (const group of Object.keys(rewriters)) {
       console.log(group);
-      Object.keys(rewriters[group]).forEach((name) => {
+      for (const name of Object.keys(rewriters[group])) {
         console.log(`    ${name}`);
-      });
-    });
+      }
+    }
   }
 
   showSnippet(snippetName) {
@@ -130,7 +130,7 @@ class SynvertCommand extends Command {
 
   loadSnippets() {
     const snippetsHome = this.snippetsHome();
-    glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => eval(fs.readFileSync(filePath, "utf-8")));
+    for (const filePath of glob.sync(path.join(snippetsHome, "lib/**/*.js")))  eval(fs.readFileSync(filePath, "utf-8"));
   }
 
   snippetsHome() {
