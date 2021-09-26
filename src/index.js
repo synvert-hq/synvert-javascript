@@ -9,6 +9,7 @@ const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
 const Synvert = require("synvert-core");
 const espree = require("espree");
+const dedent = require("dedent-js");
 
 class SynvertCommand extends Command {
   async run() {
@@ -26,6 +27,9 @@ class SynvertCommand extends Command {
     if (flags.show) {
       this.loadSnippets();
       return this.showSnippet(flags.show);
+    }
+    if (flags.generate) {
+      return this.generateSnippet(flags.generate);
     }
     if (flags.showRunProcess) {
       Synvert.Configuration.showRunProcess = true;
@@ -82,6 +86,39 @@ class SynvertCommand extends Command {
     }
   }
 
+  generateSnippet(snippetName) {
+    const [group, name] = snippetName.split("/");
+    fs.mkdirSync(path.join("lib", group), { recursive: true });
+    fs.mkdirSync(path.join("test", group), { recursive: true });
+    const libContent = dedent`
+      const Synvert = require("synvert-core");
+
+      new Synvert.Rewriter("javascript", "convert-foo-to-bar", () => {
+        description("convert foo to bar");
+
+        withFiles("**/*.js", () => {
+          withNode({ type: "ExpressionStatement", expression: { type: "Identifier", name: "foo" } }, () => {
+            replaceWith("bar")
+          });
+        });
+      });
+    `
+    const testContent = dedent`
+      require("../../lib/javascript/convert-foo-to-bar");
+      const { assertConvert } = require("../utils");
+
+      describe("javascript/convert-foo-to-bar", () => {
+        assertConvert({
+          input: "foo",
+          output: "bar",
+          snippet: "javascript/convert-foo-to-bar",
+        });
+      });
+    `
+    fs.writeFileSync(path.join("lib", group, name + ".js"), libContent);
+    fs.writeFileSync(path.join("test", group, name + ".spec.js"), testContent);
+  }
+
   runSnippet(snippetName, path, skipFiles) {
     if (path) Synvert.Configuration.path = path;
     if (skipFiles) Synvert.Configuration.skipFiles = skipFiles.split(",").map((skipFile) => skipFile.trim());
@@ -110,6 +147,7 @@ SynvertCommand.flags = {
   sync: flags.boolean({ description: "sync snippets" }),
   list: flags.boolean({ char: "l", description: "list snippets" }),
   show: flags.string({ char: "s", description: "show a snippet with snippet name" }),
+  generate: flags.string({ char: "g", description: "generate a snippet with snippet name" }),
   run: flags.string({ char: "r", description: "run a snippet with snippet name" }),
   showRunProcess: flags.boolean({ default: false, description: "show processing files when running a snippet" }),
   enableEcmaFeaturesJsx: flags.boolean({ default: false, description: "enable EcmaFeatures jsx" }),
