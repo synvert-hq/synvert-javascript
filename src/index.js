@@ -96,7 +96,7 @@ class SynvertCommand extends Command {
       new Synvert.Rewriter("javascript", "convert-foo-to-bar", () => {
         description("convert foo to bar");
 
-        withFiles("**/*.js", () => {
+        withinFiles("**/*.js", () => {
           withNode({ type: "ExpressionStatement", expression: { type: "Identifier", name: "foo" } }, () => {
             replaceWith("bar")
           });
