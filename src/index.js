@@ -93,7 +93,7 @@ class SynvertCommand extends Command {
     const libContent = dedent`
       const Synvert = require("synvert-core");
 
-      new Synvert.Rewriter("javascript", "convert-foo-to-bar", () => {
+      new Synvert.Rewriter("${group}", "${name}", () => {
         description("convert foo to bar");
 
         withinFiles("**/*.js", () => {
@@ -104,14 +104,14 @@ class SynvertCommand extends Command {
       });
     `
     const testContent = dedent`
-      require("../../lib/javascript/convert-foo-to-bar");
+      require("../../lib/${group}/${name}");
       const { assertConvert } = require("../utils");
 
-      describe("javascript/convert-foo-to-bar", () => {
+      describe("${group}/${name}", () => {
         assertConvert({
           input: "foo",
           output: "bar",
-          snippet: "javascript/convert-foo-to-bar",
+          snippet: "${group}/${name}",
         });
       });
     `
