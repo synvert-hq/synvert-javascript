@@ -54,7 +54,7 @@ class SynvertCommand extends Command {
       await stat(snippetsHome);
       process.chdir(snippetsHome);
       await exec("git checkout .; git pull --rebase");
-    } catch (err) {
+    } catch {
       await exec(`git clone https://github.com/xinminlabs/synvert-snippets-javascript.git ${snippetsHome}`);
     }
     this.log("snippets are synced");
