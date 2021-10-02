@@ -44,7 +44,7 @@ class SynvertCommand extends Command {
   }
 
   showVersion() {
-    const pjson = require('../package.json');
+    const pjson = require("../package.json");
     console.log(`${pjson.version} (with synvert-core ${Synvert.version} and espree ${espree.version})`);
   }
 
@@ -61,9 +61,9 @@ class SynvertCommand extends Command {
 
     const response = await fetch("https://registry.npmjs.org/synvert/latest");
     const json = await response.json();
-    const pjson = require('../package.json');
+    const pjson = require("../package.json");
     if (compareVersions.compare(json.version, pjson.version, ">")) {
-      console.log(`synvert is updated, please install synvert ${json.version}`)
+      console.log(`synvert is updated, please install synvert ${json.version}`);
     }
   }
 
@@ -102,7 +102,7 @@ class SynvertCommand extends Command {
           });
         });
       });
-    `
+    `;
     const testContent = dedent`
       require("../../lib/${group}/${name}");
       const { assertConvert } = require("../utils");
@@ -114,7 +114,7 @@ class SynvertCommand extends Command {
           snippet: "${group}/${name}",
         });
       });
-    `
+    `;
     fs.writeFileSync(path.join("lib", group, name + ".js"), libContent);
     fs.writeFileSync(path.join("test", group, name + ".spec.js"), testContent);
   }
