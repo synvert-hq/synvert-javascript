@@ -1,9 +1,10 @@
 # CHANGELOG
 
-## 0.10.2 (2021-10-02)
+## 0.11.0 (2021-10-02)
 
-* Make synvert-core a dev dependency
-* Dynamic group and name in generated snippet
+* Ask user to update synvert
+* Fix `group` and `name` in generated snippet
+* Update `synvert-core` to 0.27.1
 
 ## 0.10.1 (2021-09-26)
 
