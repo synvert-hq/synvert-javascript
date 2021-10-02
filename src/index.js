@@ -54,7 +54,7 @@ class SynvertCommand extends Command {
       await stat(snippetsHome);
       process.chdir(snippetsHome);
       await exec("git checkout .; git pull --rebase");
-    } catch (err) {
+    } catch (error) {
       await exec(`git clone https://github.com/xinminlabs/synvert-snippets-javascript.git ${snippetsHome}`);
     }
     this.log("snippets are synced");
@@ -90,7 +90,7 @@ class SynvertCommand extends Command {
     const [group, name] = snippetName.split("/");
     fs.mkdirSync(path.join("lib", group), { recursive: true });
     fs.mkdirSync(path.join("test", group), { recursive: true });
-    const libContent = dedent`
+    const libraryContent = dedent`
       const Synvert = require("synvert-core");
 
       new Synvert.Rewriter("${group}", "${name}", () => {
@@ -115,7 +115,7 @@ class SynvertCommand extends Command {
         });
       });
     `;
-    fs.writeFileSync(path.join("lib", group, name + ".js"), libContent);
+    fs.writeFileSync(path.join("lib", group, name + ".js"), libraryContent);
     fs.writeFileSync(path.join("test", group, name + ".spec.js"), testContent);
   }
 
