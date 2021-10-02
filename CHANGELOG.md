@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.10.2 (2021-10-02)
+
+* Make synvert-core a dev dependency
+* Dynamic group and name in generated snippet
+
 ## 0.10.1 (2021-09-26)
 
 * Rename `withFiles` to `withinFiles`
