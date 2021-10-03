@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.11.1 (2021-10-03)
+
+* Update `synvert-core` to 0.28.0
+
 ## 0.11.0 (2021-10-02)
 
 * Ask user to update synvert
