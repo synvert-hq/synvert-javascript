@@ -59,11 +59,11 @@ class SynvertCommand extends Command {
     }
     this.log("snippets are synced");
 
-    const response = await fetch("https://registry.npmjs.org/synvert/latest");
+    const response = await fetch("https://registry.npmjs.org/synvert-core/latest");
     const json = await response.json();
-    const pjson = require("../package.json");
-    if (compareVersions.compare(json.version, pjson.version, ">")) {
-      console.log(`synvert is updated, please install synvert ${json.version}`);
+    if (compareVersions.compare(json.version, Synvert.version, ">")) {
+      const { stdout } = await exec("npm root -g");
+      await exec(`cd ${stdout.trim()}/synvert; npm install synvert-core@${json.version}`);
     }
   }
 
