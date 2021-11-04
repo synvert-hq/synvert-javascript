@@ -7,9 +7,18 @@ write javascript code to change javascript code
 
 ## Usage
 
+Install through npm
+
 ```
 $ npm install -g synvert
-$ synvert-javascript --synvert
+$ synvert-javascript --sync
+```
+
+Or use it without installing
+
+```
+$ npx synvert-javascript --sync
+$ npx synvert-javascript --list
 ```
 
 ## Commands
