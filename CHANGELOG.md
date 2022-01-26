@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.13.0 (2022-01-26)
+
+* Use `xinminlabs-espree` instead of `espree`.
+
 ## 0.12.0 (2021-10-04)
 
 * Update synvert-core when syncing
