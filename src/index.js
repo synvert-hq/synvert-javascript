@@ -8,7 +8,7 @@ const fs = require("fs");
 const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
 const Synvert = require("synvert-core");
-const espree = require("espree");
+const espree = require("xinminlabs-espree");
 const dedent = require("dedent-js");
 
 class SynvertCommand extends Command {
