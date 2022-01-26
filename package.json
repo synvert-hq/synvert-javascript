@@ -1,7 +1,7 @@
 {
   "name": "synvert",
   "description": "write javascript code to change javascript code",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "author": "Richard Huang",
   "bin": {
     "synvert-javascript": "./bin/run"
