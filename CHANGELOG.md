@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.13.2 (2022-01-26)
+
+* Add `xinminlabs-espree` package
+
 ## 0.13.1 (2022-01-26)
 
 * Add `glob` package
