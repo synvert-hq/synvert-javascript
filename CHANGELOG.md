@@ -1,11 +1,9 @@
 # CHANGELOG
 
-## 0.13.2 (2022-01-26)
+## 0.14.0 (2022-01-27)
 
+* Update `synvert-core` to 0.36.0
 * Add `xinminlabs-espree` package
-
-## 0.13.1 (2022-01-26)
-
 * Add `glob` package
 
 ## 0.13.0 (2022-01-26)
