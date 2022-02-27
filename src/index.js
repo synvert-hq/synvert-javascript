@@ -17,6 +17,9 @@ class SynvertCommand extends Command {
     if (flags.version) {
       return this.showVersion();
     }
+    if (flags.format) {
+      this.format = flags.format;
+    }
     if (flags.sync) {
       return await this.syncSnippets();
     }
@@ -69,12 +72,32 @@ class SynvertCommand extends Command {
 
   listSnippets() {
     const rewriters = Synvert.Rewriter.rewriters;
-    Object.keys(rewriters).forEach((group) => {
-      console.log(group);
-      Object.keys(rewriters[group]).forEach((name) => {
-        console.log(`    ${name}`);
+    if (this.format === 'json') {
+      const output = [];
+      Object.keys(rewriters).forEach((group) => {
+        Object.keys(rewriters[group]).forEach((name) => {
+          const rewriter = rewriters[group][name];
+          rewriter.processWithSandbox();
+          const subSnippets = rewriter.subSnippets.map(subSnippt => ({ group: subSnippt.group, name: subSnippt.name }));
+          const item = { group, name, description: rewriter.description(), subSnippets };
+          if (rewriter.nodeVersion) {
+            item.nodeVersion = rewriter.nodeVersion.version;
+          }
+          if (rewriter.npmVersion) {
+            item.npmVersion = { name: rewriter.npmVersion.name, version: rewriter.npmVersion.version };
+          }
+          output.push(item);
+        });
       });
-    });
+      console.log(JSON.stringify(output));
+    } else {
+      Object.keys(rewriters).forEach((group) => {
+        console.log(group);
+        Object.keys(rewriters[group]).forEach((name) => {
+          console.log(`    ${name}`);
+        });
+      });
+    }
   }
 
   showSnippet(snippetName) {
@@ -149,6 +172,7 @@ SynvertCommand.flags = {
   show: flags.string({ char: "s", description: "show a snippet with snippet name" }),
   generate: flags.string({ char: "g", description: "generate a snippet with snippet name" }),
   run: flags.string({ char: "r", description: "run a snippet with snippet name" }),
+  format: flags.string({ char: "f", description: "output format" }),
   showRunProcess: flags.boolean({ default: false, description: "show processing files when running a snippet" }),
   enableEcmaFeaturesJsx: flags.boolean({ default: false, description: "enable EcmaFeatures jsx" }),
   skipFiles: flags.string({ default: "node_modules/**", description: "skip files, splitted by comma" }),
