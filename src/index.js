@@ -72,13 +72,16 @@ class SynvertCommand extends Command {
 
   listSnippets() {
     const rewriters = Synvert.Rewriter.rewriters;
-    if (this.format === 'json') {
+    if (this.format === "json") {
       const output = [];
       Object.keys(rewriters).forEach((group) => {
         Object.keys(rewriters[group]).forEach((name) => {
           const rewriter = rewriters[group][name];
           rewriter.processWithSandbox();
-          const subSnippets = rewriter.subSnippets.map(subSnippt => ({ group: subSnippt.group, name: subSnippt.name }));
+          const subSnippets = rewriter.subSnippets.map((subSnippt) => ({
+            group: subSnippt.group,
+            name: subSnippt.name,
+          }));
           const item = { group, name, description: rewriter.description(), subSnippets };
           if (rewriter.nodeVersion) {
             item.nodeVersion = rewriter.nodeVersion.version;
