@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.15.0 (2022-02-27)
+
+* Output json format
+
 ## 0.14.0 (2022-01-27)
 
 * Update `synvert-core` to 0.36.0
