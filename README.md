@@ -12,6 +12,27 @@ Install through npm
 ```
 $ npm install -g synvert
 $ synvert-javascript --sync
+
+$ synvert-javascript --help
+Write javascript code to change javascript code
+
+USAGE
+  $ synvert-javascript
+
+OPTIONS
+  -d, --load=load          load custom snippets, snippet paths can be local file path or remote http url
+  -f, --format=format      output format
+  -g, --generate=generate  generate a snippet with snippet name
+  -h, --help               show CLI help
+  -l, --list               list snippets
+  -r, --run=run            run a snippet with snippet name
+  -s, --show=show          show a snippet with snippet name
+  -v, --version
+  --enableEcmaFeaturesJsx  enable EcmaFeatures jsx
+  --path=path              [default: .] project path
+  --showRunProcess         show processing files when running a snippet
+  --skipFiles=skipFiles    [default: node_modules/**] skip files, splitted by comma
+  --sync                   sync snippets
 ```
 
 Or use it without installing
@@ -44,7 +65,15 @@ $ synvert-javascript --show javascript/no-useless-constructor
 #### run a snippet
 
 ```
-$ synvert-javascript --run javascript/no-useless-constructor 
+$ synvert-javascript --run javascript/no-useless-constructor
+```
+
+load custom snippet
+
+```
+$ synvert-javascript --load https://raw.githubusercontent.com/xinminlabs/synvert-snippets-javascript/master/lib/javascript/no-useless-constructor.js --run javascript/no-useless-constructor
+
+$ synvert-javascript --load ~/Sites/xinminlabs/synvert-snippets-javascript/lib/jquery/deprecate-event-shorthand.js --run javascript/no-useless-constructor
 ```
 
 show run progress
