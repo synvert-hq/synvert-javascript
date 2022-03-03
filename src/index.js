@@ -20,15 +20,16 @@ class SynvertCommand extends Command {
     if (flags.format) {
       this.format = flags.format;
     }
+    this.load = flags.load || '';
     if (flags.sync) {
       return await this.syncSnippets();
     }
     if (flags.list) {
-      this.loadSnippets();
+      await this.loadSnippets();
       return this.listSnippets();
     }
     if (flags.show) {
-      this.loadSnippets();
+      await this.loadSnippets();
       return this.showSnippet(flags.show);
     }
     if (flags.generate) {
@@ -41,7 +42,7 @@ class SynvertCommand extends Command {
       Synvert.Configuration.enableEcmaFeaturesJsx = true;
     }
     if (flags.run) {
-      this.loadSnippets();
+      await this.loadSnippets();
       return this.runSnippet(flags.run, flags.path, flags.skipFiles);
     }
   }
@@ -154,9 +155,20 @@ class SynvertCommand extends Command {
     console.log(`===== ${snippetName} done =====`);
   }
 
-  loadSnippets() {
+  async loadSnippets() {
     const snippetsHome = this.snippetsHome();
     glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => eval(fs.readFileSync(filePath, "utf-8")));
+
+    await Promise.all(this.load.split(',').map(async (loadPath) => {
+      if (loadPath === '') return;
+
+      if (loadPath.startsWith('http')) {
+        const response = await fetch(loadPath);
+        eval(await response.text());
+      } else {
+        eval(fs.readFileSync(loadPath, "utf-8"));
+      }
+    }));
   }
 
   snippetsHome() {
@@ -176,6 +188,7 @@ SynvertCommand.flags = {
   generate: flags.string({ char: "g", description: "generate a snippet with snippet name" }),
   run: flags.string({ char: "r", description: "run a snippet with snippet name" }),
   format: flags.string({ char: "f", description: "output format" }),
+  load: flags.string({ char: "d", description: "load custom snippets, snippet paths can be local file path or remote http url" }),
   showRunProcess: flags.boolean({ default: false, description: "show processing files when running a snippet" }),
   enableEcmaFeaturesJsx: flags.boolean({ default: false, description: "enable EcmaFeatures jsx" }),
   skipFiles: flags.string({ default: "node_modules/**", description: "skip files, splitted by comma" }),
