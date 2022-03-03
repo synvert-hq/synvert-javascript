@@ -54,6 +54,8 @@ $ synvert-javascript --snipets
 
 ```
 $ synvert-javascript --list
+
+$ synvert-javascript --list --format json
 ```
 
 #### show a snippet
