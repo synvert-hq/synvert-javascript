@@ -1,8 +1,13 @@
 # CHANGELOG
 
+## 0.16.0 (2022-03-03)
+
+* Load custom snippet
+
 ## 0.15.0 (2022-02-27)
 
 * Output json format
+* Update `synvert-core` to 0.39.0
 
 ## 0.14.0 (2022-01-27)
 
