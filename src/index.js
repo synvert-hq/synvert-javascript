@@ -123,7 +123,7 @@ class SynvertCommand extends Command {
       new Synvert.Rewriter("${group}", "${name}", () => {
         description("convert foo to bar");
 
-        withinFiles("**/*.js", () => {
+        withinFiles(Synvert.ALL_FILES, function () {
           withNode({ type: "ExpressionStatement", expression: { type: "Identifier", name: "foo" } }, () => {
             replaceWith("bar")
           });
@@ -135,7 +135,7 @@ class SynvertCommand extends Command {
       require(\`../../lib/\${snippet}\`);
       const { assertConvert } = require("../utils");
 
-      describe(\`snippet\`, () => {
+      describe(snippet, () => {
         const input = \`
           foo
         \`
