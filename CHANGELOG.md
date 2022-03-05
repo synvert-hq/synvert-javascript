@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.16.1 (2022-03-05)
+
+* Output message after generating a snippet.
+* Update generated snippet code.
+* Update `synvert-core` to 0.39.1
+
 ## 0.16.0 (2022-03-03)
 
 * Load custom snippet
