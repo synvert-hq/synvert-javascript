@@ -131,15 +131,23 @@ class SynvertCommand extends Command {
       });
     `;
     const testContent = dedent`
-      const snippetName = "${group}/${name}"
-      require("../../lib/\${snippetName}");
+      const snippet = "${group}/${name}"
+      require(\`../../lib/\${snippet}\`);
       const { assertConvert } = require("../utils");
 
-      describe("\${snippetName}", () => {
+      describe(\`snippet\`, () => {
+        const input = \`
+          foo
+        \`
+
+        const output = \`
+          bar
+        \`
+
         assertConvert({
-          input: "foo",
-          output: "bar",
-          snippet: "\${snippetName}",
+          input,
+          output,
+          snippet,
         });
       });
     `;
