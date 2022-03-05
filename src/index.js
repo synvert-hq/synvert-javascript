@@ -144,6 +144,7 @@ class SynvertCommand extends Command {
     `;
     fs.writeFileSync(path.join("lib", group, name + ".js"), libContent);
     fs.writeFileSync(path.join("test", group, name + ".spec.js"), testContent);
+    console.log(`${snippetName} snippet is generated.`)
   }
 
   runSnippet(snippetName, path, skipFiles) {
