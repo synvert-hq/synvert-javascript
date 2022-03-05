@@ -20,7 +20,7 @@ class SynvertCommand extends Command {
     if (flags.format) {
       this.format = flags.format;
     }
-    this.load = flags.load || '';
+    this.load = flags.load || "";
     if (flags.sync) {
       return await this.syncSnippets();
     }
@@ -144,7 +144,7 @@ class SynvertCommand extends Command {
     `;
     fs.writeFileSync(path.join("lib", group, name + ".js"), libContent);
     fs.writeFileSync(path.join("test", group, name + ".spec.js"), testContent);
-    console.log(`${snippetName} snippet is generated.`)
+    console.log(`${snippetName} snippet is generated.`);
   }
 
   runSnippet(snippetName, path, skipFiles) {
@@ -160,16 +160,18 @@ class SynvertCommand extends Command {
     const snippetsHome = this.snippetsHome();
     glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => eval(fs.readFileSync(filePath, "utf-8")));
 
-    await Promise.all(this.load.split(',').map(async (loadPath) => {
-      if (loadPath === '') return;
+    await Promise.all(
+      this.load.split(",").map(async (loadPath) => {
+        if (loadPath === "") return;
 
-      if (loadPath.startsWith('http')) {
-        const response = await fetch(loadPath);
-        eval(await response.text());
-      } else {
-        eval(fs.readFileSync(loadPath, "utf-8"));
-      }
-    }));
+        if (loadPath.startsWith("http")) {
+          const response = await fetch(loadPath);
+          eval(await response.text());
+        } else {
+          eval(fs.readFileSync(loadPath, "utf-8"));
+        }
+      })
+    );
   }
 
   snippetsHome() {
@@ -189,7 +191,10 @@ SynvertCommand.flags = {
   generate: flags.string({ char: "g", description: "generate a snippet with snippet name" }),
   run: flags.string({ char: "r", description: "run a snippet with snippet name" }),
   format: flags.string({ char: "f", description: "output format" }),
-  load: flags.string({ char: "d", description: "load custom snippets, snippet paths can be local file path or remote http url" }),
+  load: flags.string({
+    char: "d",
+    description: "load custom snippets, snippet paths can be local file path or remote http url",
+  }),
   showRunProcess: flags.boolean({ default: false, description: "show processing files when running a snippet" }),
   enableEcmaFeaturesJsx: flags.boolean({ default: false, description: "enable EcmaFeatures jsx" }),
   skipFiles: flags.string({ default: "node_modules/**", description: "skip files, splitted by comma" }),
