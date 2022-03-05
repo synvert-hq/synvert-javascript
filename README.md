@@ -38,8 +38,8 @@ OPTIONS
 Or use it without installing
 
 ```
-$ npx synvert-javascript --sync
-$ npx synvert-javascript --list
+$ npx -p synvert synvert-javascript --sync
+$ npx -p synvert synvert-javascript --list
 ```
 
 ## Commands
