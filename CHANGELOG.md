@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.16.2 (2022-03-16)
+
+* Update `synvert-core` to 0.40.0
+
 ## 0.16.1 (2022-03-05)
 
 * Output message after generating a snippet.
