@@ -5,14 +5,40 @@
 [![Version](https://img.shields.io/npm/v/synvert.svg)](https://npmjs.org/package/synvert)
 [![AwesomeCode Status for xinminlabs/synvert-javascript](https://awesomecode.io/projects/a211af53-b83c-49e0-b12f-985463cbf297/status)](https://awesomecode.io/repos/xinminlabs/synvert-javascript)
 
-## Usage
+synvert-javascript is CLI to use [synvert-snippets-javascript](https://github.com/xinminlabs/synvert-snippets-javascript) to rewrite javascript code.
+
+## Installation
 
 Install through npm
 
 ```
 $ npm install -g synvert
-$ synvert-javascript --sync
+```
 
+This will also install `synvert-core-javascript`.
+
+Before using synvert, you need to sync all official snippets first.
+
+```
+$ synvert-javascript --sync
+```
+
+Then you can use synvert to rewrite your javascript code, e.g.
+
+```
+$ synvert-javascript -r jqeury/migrate
+```
+
+Or use it without installing
+
+```
+$ npx -p synvert synvert-javascript --sync
+$ npx -p synvert synvert-javascript --list
+```
+
+## Usage
+
+```
 $ synvert-javascript --help
 Write javascript code to change javascript code
 
@@ -35,42 +61,45 @@ OPTIONS
   --sync                   sync snippets
 ```
 
-Or use it without installing
-
-```
-$ npx -p synvert synvert-javascript --sync
-$ npx -p synvert synvert-javascript --list
-```
-
 ## Commands
 
-#### sync snippets
+#### Sync snippets
+
+[Official Snippets](https://github.com/xinminlabs/synvert-snippets-javascript) are available on github,
+you can sync them any time you want.
+
 
 ```
-$ synvert-javascript --snipets
+$ synvert-javascript --sync
 ```
 
-#### list all snippets
+#### List snippets
+
+List all available snippets.
 
 ```
-$ synvert-javascript --list
+$ synvert-javascript -l
 
 $ synvert-javascript --list --format json
 ```
 
-#### show a snippet
+#### Show a snippet
+
+Describe what a snippet does.
 
 ```
-$ synvert-javascript --show javascript/no-useless-constructor
+$ synvert-javascript -s jquery/migrate
 ```
 
-#### run a snippet
+#### Run a snippet
+
+Run a snippet, analyze and then rewrite code.
 
 ```
-$ synvert-javascript --run javascript/no-useless-constructor
+$ synvert-javascript --run jquery/migrate
 ```
 
-load custom snippet
+Coad custom snippet.
 
 ```
 $ synvert-javascript --load https://raw.githubusercontent.com/xinminlabs/synvert-snippets-javascript/master/lib/javascript/no-useless-constructor.js --run javascript/no-useless-constructor
@@ -78,26 +107,32 @@ $ synvert-javascript --load https://raw.githubusercontent.com/xinminlabs/synvert
 $ synvert-javascript --load ~/Sites/xinminlabs/synvert-snippets-javascript/lib/jquery/deprecate-event-shorthand.js --run javascript/no-useless-constructor
 ```
 
-show run progress
+Show processing files when running a snippet.
 
 ```
 $ synvert-javascript --run javascript/no-useless-constructor --showRunProgress
 ```
 
-enable ecma features jsx
+Enable EcmaFeatures jsx.
 
 ```
 $ synvert-javascript --run javascript/no-useless-constructor --enableEcmaFeaturesJsx
 ```
 
-skip files
+Skip files.
 
 ```
 $ synvert-javascript --run javascript/no-useless-constructor --skipFiles=test/**
 ```
 
-customize path
+Customize path.
 
 ```
 $ synvert-javascript --run javascript/no-useless-constructor --path=/repos/synvert
+```
+
+#### Generate a snippet
+
+```
+$ synvert-javascript -g javascript/convert-foo-to-bar
 ```
