@@ -5,7 +5,11 @@
 [![Version](https://img.shields.io/npm/v/synvert.svg)](https://npmjs.org/package/synvert)
 [![AwesomeCode Status for xinminlabs/synvert-javascript](https://awesomecode.io/projects/a211af53-b83c-49e0-b12f-985463cbf297/status)](https://awesomecode.io/repos/xinminlabs/synvert-javascript)
 
-synvert-javascript is CLI to use [synvert-snippets-javascript](https://github.com/xinminlabs/synvert-snippets-javascript) to rewrite javascript code.
+`synvert-javascript` is a command tool to rewrite javascript code automatically, it depends on `synvert-core-javascript` and `synvert-snippets-javascript`.
+
+[synvert-core-javascript](https://github.com/xinminlabs/synvert-core-javascript) provides a set of DSLs to rewrite javascript code.
+
+[synvert-snippets-javascript](https://github.com/xinminlabs/synvert-snippets-javascript) provides official snippets to rewrite javascript code.
 
 ## Installation
 
