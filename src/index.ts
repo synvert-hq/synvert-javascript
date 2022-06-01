@@ -9,7 +9,7 @@ import Synvert from "synvert-core";
 import dedent from "dedent-js";
 const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
-const espree = require("xinminlabs-espree");
+const espree = require("@xinminlabs/espree");
 
 type SimpleSnippet = {
   group: string,
