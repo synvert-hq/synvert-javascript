@@ -1,18 +1,38 @@
-const { Command, flags } = require("@oclif/command");
-const { promisify } = require("util");
-const fetch = require("node-fetch");
-const path = require("path");
-const glob = require("glob");
-const compareVersions = require("compare-versions");
-const fs = require("fs");
+import { Command, flags } from "@oclif/command";
+import { promisify } from "util";
+import fetch from "node-fetch";
+import path from "path";
+import glob from "glob";
+import compareVersions from "compare-versions";
+import fs from "fs";
+import Synvert from "synvert-core";
+import dedent from "dedent-js";
 const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
-const Synvert = require("synvert-core");
 const espree = require("xinminlabs-espree");
-const dedent = require("dedent-js");
+
+type SimpleSnippet = {
+  group: string,
+  name: string
+}
+
+type Snippet = {
+  group: string,
+  name: string,
+  description: string,
+  subSnippets: SimpleSnippet[],
+  nodeVersion?: string,
+  npmVersion?: {
+    name: string,
+    version: string
+  }
+}
 
 class SynvertCommand extends Command {
-  async run() {
+  private format!: string;
+  private load: string = "";
+
+  async run(): Promise<void> {
     const { flags } = this.parse(SynvertCommand);
     if (flags.version) {
       return this.showVersion();
@@ -47,12 +67,12 @@ class SynvertCommand extends Command {
     }
   }
 
-  showVersion() {
+  showVersion(): void {
     const pjson = require("../package.json");
     console.log(`${pjson.version} (with synvert-core ${Synvert.version} and espree ${espree.version})`);
   }
 
-  async syncSnippets() {
+  async syncSnippets(): Promise<void> {
     const snippetsHome = this.snippetsHome();
     try {
       await stat(snippetsHome);
@@ -71,10 +91,10 @@ class SynvertCommand extends Command {
     }
   }
 
-  listSnippets() {
+  listSnippets(): void {
     const rewriters = Synvert.Rewriter.rewriters;
     if (this.format === "json") {
-      const output = [];
+      const output: Snippet[] = [];
       Object.keys(rewriters).forEach((group) => {
         Object.keys(rewriters[group]).forEach((name) => {
           const rewriter = rewriters[group][name];
@@ -83,7 +103,7 @@ class SynvertCommand extends Command {
             group: subSnippt.group,
             name: subSnippt.name,
           }));
-          const item = { group, name, description: rewriter.description(), subSnippets };
+          const item: Snippet = { group, name, description: rewriter.description(), subSnippets };
           if (rewriter.nodeVersion) {
             item.nodeVersion = rewriter.nodeVersion.version;
           }
@@ -104,7 +124,7 @@ class SynvertCommand extends Command {
     }
   }
 
-  showSnippet(snippetName) {
+  showSnippet(snippetName: string): void {
     const filePath = path.join(this.snippetsHome(), "lib", `${snippetName}.js`);
     try {
       console.log(fs.readFileSync(filePath, "utf-8"));
@@ -113,7 +133,7 @@ class SynvertCommand extends Command {
     }
   }
 
-  generateSnippet(snippetName) {
+  generateSnippet(snippetName: string): void {
     const [group, name] = snippetName.split("/");
     fs.mkdirSync(path.join("lib", group), { recursive: true });
     fs.mkdirSync(path.join("test", group), { recursive: true });
@@ -156,7 +176,7 @@ class SynvertCommand extends Command {
     console.log(`${snippetName} snippet is generated.`);
   }
 
-  runSnippet(snippetName, path, skipFiles) {
+  runSnippet(snippetName: string, path: string, skipFiles: string): void {
     if (path) Synvert.Configuration.path = path;
     if (skipFiles) Synvert.Configuration.skipFiles = skipFiles.split(",").map((skipFile) => skipFile.trim());
     console.log(`===== ${snippetName} started =====`);
@@ -165,7 +185,7 @@ class SynvertCommand extends Command {
     console.log(`===== ${snippetName} done =====`);
   }
 
-  async loadSnippets() {
+  async loadSnippets(): Promise<void> {
     const snippetsHome = this.snippetsHome();
     glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => eval(fs.readFileSync(filePath, "utf-8")));
 
@@ -184,7 +204,7 @@ class SynvertCommand extends Command {
   }
 
   snippetsHome() {
-    return process.env.SYNVERT_SNIPPETS_HOME || path.join(process.env.HOME, ".synvert-javascript");
+    return process.env.SYNVERT_SNIPPETS_HOME || path.join(process.env.HOME!, ".synvert-javascript");
   }
 }
 

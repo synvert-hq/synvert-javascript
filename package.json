@@ -8,7 +8,9 @@
   },
   "bugs": "https://github.com/xinminlabs/synvert-javascript/issues",
   "devDependencies": {
-    "@oclif/dev-cli": "^1.26.0"
+    "@oclif/dev-cli": "^1.26.0",
+    "@types/node-fetch": "^2.6.1",
+    "ts-node": "^10.8.0"
   },
   "engines": {
     "node": ">=8.0.0"
@@ -23,12 +25,13 @@
     "rewrite"
   ],
   "license": "ISC",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "oclif": {
     "bin": "synvert-javascript"
   },
   "repository": "xinminlabs/synvert-javascript",
   "scripts": {
+    "build": "tsc --project tsconfig.build.json",
     "prepack": "oclif-dev readme",
     "test": "echo NO TESTS",
     "version": "oclif-dev readme && git add README.md"
@@ -41,7 +44,7 @@
     "dedent-js": "^1.0.1",
     "glob": "^7.2.0",
     "node-fetch": "^2.6.5",
-    "synvert-core": "^0.x",
+    "synvert-core": "^1.0.1",
     "xinminlabs-espree": "^9.3.0"
   }
 }
