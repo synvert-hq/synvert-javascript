@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.0.0 (2022-06-01)
+
+* Migrate to Typescript
+* Update `synvert-core` to 1.0.1
+
 ## 0.16.2 (2022-03-16)
 
 * Update `synvert-core` to 0.40.0
