@@ -5,7 +5,7 @@ import path from "path";
 import glob from "glob";
 import compareVersions from "compare-versions";
 import fs from "fs";
-import Synvert from "synvert-core";
+import * as Synvert from "synvert-core";
 import dedent from "dedent-js";
 const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
