@@ -101,7 +101,8 @@ class SynvertCommand extends Command {
       Object.keys(rewriters).forEach((group) => {
         Object.keys(rewriters[group]).forEach((name) => {
           const rewriter = rewriters[group][name];
-          rewriter.processWithSandbox();
+          rewriter.options.runInstance = false;
+          rewriter.process();
           const subSnippets = rewriter.subSnippets.map((subSnippt) => ({
             group: subSnippt.group,
             name: subSnippt.name,
