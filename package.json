@@ -45,6 +45,7 @@
     "dedent-js": "^1.0.1",
     "glob": "^7.2.0",
     "node-fetch": "^2.6.5",
-    "synvert-core": "^1.0.1"
+    "synvert-core": "^1.0.1",
+    "vm2": "^3.9.10"
   }
 }

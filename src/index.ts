@@ -7,6 +7,7 @@ import compareVersions from "compare-versions";
 import fs from "fs";
 import * as Synvert from "synvert-core";
 import dedent from "dedent-js";
+import { VM } from "vm2";
 const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
 const espree = require("@xinminlabs/espree");
@@ -27,6 +28,8 @@ type Snippet = {
     version: string
   }
 }
+
+const vm = new VM({ eval: false });
 
 class SynvertCommand extends Command {
   private format!: string;
@@ -187,7 +190,7 @@ class SynvertCommand extends Command {
 
   async readSnippets(): Promise<void> {
     const snippetsHome = this.snippetsHome();
-    glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => eval(fs.readFileSync(filePath, "utf-8")));
+    glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => vm.run(fs.readFileSync(filePath, "utf-8")));
 
     await Promise.all(
       this.load.split(",").map(async (loadPath) => {
@@ -195,9 +198,9 @@ class SynvertCommand extends Command {
 
         if (loadPath.startsWith("http")) {
           const response = await fetch(loadPath);
-          eval(await response.text());
+          vm.run(await response.text());
         } else {
-          eval(fs.readFileSync(loadPath, "utf-8"));
+          vm.run(fs.readFileSync(loadPath, "utf-8"));
         }
       })
     );
