@@ -48,11 +48,11 @@ class SynvertCommand extends Command {
       return await this.syncSnippets();
     }
     if (flags.list) {
-      await this.readSnippets();
+      this.readSnippets();
       return this.listSnippets();
     }
     if (flags.show) {
-      await this.readSnippets();
+      this.readSnippets();
       return this.showSnippet(flags.show);
     }
     if (flags.generate) {
@@ -65,7 +65,7 @@ class SynvertCommand extends Command {
       Synvert.Configuration.enableEcmaFeaturesJsx = true;
     }
     if (flags.run) {
-      await this.readSnippets();
+      this.readSnippets();
       return this.runSnippet(flags.run, flags.path, flags.skipFiles);
     }
   }
@@ -189,22 +189,9 @@ class SynvertCommand extends Command {
     console.log(`===== ${snippetName} done =====`);
   }
 
-  async readSnippets(): Promise<void> {
+  readSnippets() {
     const snippetsHome = this.snippetsHome();
     glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => vm.run(fs.readFileSync(filePath, "utf-8")));
-
-    await Promise.all(
-      this.load.split(",").map(async (loadPath) => {
-        if (loadPath === "") return;
-
-        if (loadPath.startsWith("http")) {
-          const response = await fetch(loadPath);
-          vm.run(await response.text());
-        } else {
-          vm.run(fs.readFileSync(loadPath, "utf-8"));
-        }
-      })
-    );
   }
 
   snippetsHome() {
