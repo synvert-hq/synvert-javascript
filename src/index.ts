@@ -7,7 +7,7 @@ import compareVersions from "compare-versions";
 import fs from "fs";
 import * as Synvert from "synvert-core";
 import dedent from "dedent-js";
-import { VM } from "vm2";
+import { NodeVM } from "vm2";
 const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
 const espree = require("@xinminlabs/espree");
@@ -29,7 +29,7 @@ type Snippet = {
   }
 }
 
-const vm = new VM({ eval: false });
+const vm = new NodeVM({ require: { external: true }, eval: false });
 
 class SynvertCommand extends Command {
   private format!: string;
@@ -191,7 +191,7 @@ class SynvertCommand extends Command {
 
   readSnippets() {
     const snippetsHome = this.snippetsHome();
-    glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => vm.run(fs.readFileSync(filePath, "utf-8")));
+    glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => vm.run(fs.readFileSync(filePath, "utf-8"), "node_modules"));
   }
 
   snippetsHome() {
