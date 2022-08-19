@@ -29,7 +29,7 @@ type Snippet = {
   }
 }
 
-const vm = new NodeVM({ require: { external: true }, eval: false });
+const vm = new NodeVM({ sandbox: global, require: { external: true }, eval: false });
 
 class SynvertCommand extends Command {
   private format!: string;
