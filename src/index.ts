@@ -13,21 +13,21 @@ const exec = promisify(require("child_process").exec);
 const espree = require("@xinminlabs/espree");
 
 type SimpleSnippet = {
-  group: string,
-  name: string
-}
+  group: string;
+  name: string;
+};
 
 type Snippet = {
-  group: string,
-  name: string,
-  description: string,
-  subSnippets: SimpleSnippet[],
-  nodeVersion?: string,
+  group: string;
+  name: string;
+  description: string;
+  subSnippets: SimpleSnippet[];
+  nodeVersion?: string;
   npmVersion?: {
-    name: string,
-    version: string
-  }
-}
+    name: string;
+    version: string;
+  };
+};
 
 const vm = new NodeVM({ require: { external: true }, eval: false });
 
@@ -72,7 +72,9 @@ class SynvertCommand extends Command {
 
   showVersion(): void {
     const pjson = require("../package.json");
-    console.log(`${pjson.version} (with synvert-core ${Synvert.version} and espree ${espree.version})`);
+    console.log(
+      `${pjson.version} (with synvert-core ${Synvert.version} and espree ${espree.version})`
+    );
   }
 
   async syncSnippets(): Promise<void> {
@@ -82,15 +84,21 @@ class SynvertCommand extends Command {
       process.chdir(snippetsHome);
       await exec("git checkout .; git pull --rebase");
     } catch {
-      await exec(`git clone https://github.com/xinminlabs/synvert-snippets-javascript.git ${snippetsHome}`);
+      await exec(
+        `git clone https://github.com/xinminlabs/synvert-snippets-javascript.git ${snippetsHome}`
+      );
     }
     this.log("snippets are synced");
 
-    const response = await fetch("https://registry.npmjs.org/synvert-core/latest");
+    const response = await fetch(
+      "https://registry.npmjs.org/synvert-core/latest"
+    );
     const json = await response.json();
     if (compareVersions.compare(json.version, Synvert.version, ">")) {
       const { stdout } = await exec("npm root -g");
-      await exec(`cd ${stdout.trim()}/synvert; npm install synvert-core@${json.version}`);
+      await exec(
+        `cd ${stdout.trim()}/synvert; npm install synvert-core@${json.version}`
+      );
     }
   }
 
@@ -107,12 +115,20 @@ class SynvertCommand extends Command {
             group: subSnippt.group,
             name: subSnippt.name,
           }));
-          const item: Snippet = { group, name, description: rewriter.description(), subSnippets };
+          const item: Snippet = {
+            group,
+            name,
+            description: rewriter.description(),
+            subSnippets,
+          };
           if (rewriter.nodeVersion) {
             item.nodeVersion = rewriter.nodeVersion.version;
           }
           if (rewriter.npmVersion) {
-            item.npmVersion = { name: rewriter.npmVersion.name, version: rewriter.npmVersion.version };
+            item.npmVersion = {
+              name: rewriter.npmVersion.name,
+              version: rewriter.npmVersion.version,
+            };
           }
           output.push(item);
         });
@@ -182,7 +198,10 @@ class SynvertCommand extends Command {
 
   runSnippet(snippetName: string, path: string, skipFiles: string): void {
     if (path) Synvert.Configuration.path = path;
-    if (skipFiles) Synvert.Configuration.skipFiles = skipFiles.split(",").map((skipFile) => skipFile.trim());
+    if (skipFiles)
+      Synvert.Configuration.skipFiles = skipFiles
+        .split(",")
+        .map((skipFile) => skipFile.trim());
     console.log(`===== ${snippetName} started =====`);
     const [group, name] = snippetName.split("/");
     Synvert.Rewriter.call(group, name);
@@ -191,11 +210,18 @@ class SynvertCommand extends Command {
 
   readSnippets() {
     const snippetsHome = this.snippetsHome();
-    glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => vm.run(fs.readFileSync(filePath, "utf-8"), "node_modules"));
+    glob
+      .sync(path.join(snippetsHome, "lib/**/*.js"))
+      .forEach((filePath) =>
+        vm.run(fs.readFileSync(filePath, "utf-8"), "node_modules")
+      );
   }
 
   snippetsHome() {
-    return process.env.SYNVERT_SNIPPETS_HOME || path.join(process.env.HOME!, ".synvert-javascript");
+    return (
+      process.env.SYNVERT_SNIPPETS_HOME ||
+      path.join(process.env.HOME!, ".synvert-javascript")
+    );
   }
 }
 
@@ -207,18 +233,40 @@ SynvertCommand.flags = {
   version: flags.boolean({ char: "v" }),
   sync: flags.boolean({ description: "sync snippets" }),
   list: flags.boolean({ char: "l", description: "list snippets" }),
-  show: flags.string({ char: "s", description: "show a snippet with snippet name" }),
-  generate: flags.string({ char: "g", description: "generate a snippet with snippet name" }),
-  run: flags.string({ char: "r", description: "run a snippet with snippet name" }),
-  test: flags.string({ char: "t", description: "test a snippet with snippet name" }),
+  show: flags.string({
+    char: "s",
+    description: "show a snippet with snippet name",
+  }),
+  generate: flags.string({
+    char: "g",
+    description: "generate a snippet with snippet name",
+  }),
+  run: flags.string({
+    char: "r",
+    description: "run a snippet with snippet name",
+  }),
+  test: flags.string({
+    char: "t",
+    description: "test a snippet with snippet name",
+  }),
   format: flags.string({ char: "f", description: "output format" }),
   load: flags.string({
     char: "d",
-    description: "load custom snippets, snippet paths can be local file path or remote http url",
+    description:
+      "load custom snippets, snippet paths can be local file path or remote http url",
   }),
-  showRunProcess: flags.boolean({ default: false, description: "show processing files when running a snippet" }),
-  enableEcmaFeaturesJsx: flags.boolean({ default: false, description: "enable EcmaFeatures jsx" }),
-  skipFiles: flags.string({ default: "node_modules/**", description: "skip files, splitted by comma" }),
+  showRunProcess: flags.boolean({
+    default: false,
+    description: "show processing files when running a snippet",
+  }),
+  enableEcmaFeaturesJsx: flags.boolean({
+    default: false,
+    description: "enable EcmaFeatures jsx",
+  }),
+  skipFiles: flags.string({
+    default: "node_modules/**",
+    description: "skip files, splitted by comma",
+  }),
   path: flags.string({ default: ".", description: "project path" }),
 };
 
