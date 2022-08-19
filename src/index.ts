@@ -45,11 +45,11 @@ class SynvertCommand extends Command {
       return await this.syncSnippets();
     }
     if (flags.list) {
-      await this.loadSnippets();
+      await this.readSnippets();
       return this.listSnippets();
     }
     if (flags.show) {
-      await this.loadSnippets();
+      await this.readSnippets();
       return this.showSnippet(flags.show);
     }
     if (flags.generate) {
@@ -62,7 +62,7 @@ class SynvertCommand extends Command {
       Synvert.Configuration.enableEcmaFeaturesJsx = true;
     }
     if (flags.run) {
-      await this.loadSnippets();
+      await this.readSnippets();
       return this.runSnippet(flags.run, flags.path, flags.skipFiles);
     }
   }
@@ -185,7 +185,7 @@ class SynvertCommand extends Command {
     console.log(`===== ${snippetName} done =====`);
   }
 
-  async loadSnippets(): Promise<void> {
+  async readSnippets(): Promise<void> {
     const snippetsHome = this.snippetsHome();
     glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => eval(fs.readFileSync(filePath, "utf-8")));
 
@@ -219,6 +219,7 @@ SynvertCommand.flags = {
   show: flags.string({ char: "s", description: "show a snippet with snippet name" }),
   generate: flags.string({ char: "g", description: "generate a snippet with snippet name" }),
   run: flags.string({ char: "r", description: "run a snippet with snippet name" }),
+  test: flags.string({ char: "t", description: "test a snippet with snippet name" }),
   format: flags.string({ char: "f", description: "output format" }),
   load: flags.string({
     char: "d",
