@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.1.0 (2022-08-20)
+
+* Rename `loadSnippets` to `readSnippets`
+* Use `vm2` instead of `eval`
+* Run a snippet from remote url or local file path
+
 ## 1.0.0 (2022-06-01)
 
 * Migrate to Typescript
