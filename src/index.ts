@@ -69,6 +69,15 @@ class SynvertCommand extends Command {
       }
       return this.loadAndRunSnippet(flags.run, flags.path, flags.skipFiles);
     }
+    if (flags.test) {
+      if (isValidUrl(flags.test)) {
+        return await this.loadAndTestUrlSnippet(flags.test, flags.path, flags.skipFiles);
+      }
+      if (isValidFile(flags.test)) {
+        return await this.loadAndTestFileSnippet(flags.test, flags.path, flags.skipFiles);
+      }
+      return this.loadAndTestSnippet(flags.test, flags.path, flags.skipFiles);
+    }
   }
 
   showVersion(): void {
@@ -188,10 +197,23 @@ class SynvertCommand extends Command {
     this.runSnippet(group, name, path, skipFiles);
   }
 
+  async loadAndTestUrlSnippet(urlString: string, path: string, skipFiles: string) {
+    const response = await fetch(urlString);
+    runInVm(await response.text());
+    const [group, name] = getLastSnippetGroupAndName();
+    this.testSnippet(group, name, path, skipFiles);
+  }
+
   async loadAndRunFileSnippet(snippetPath: string, path: string, skipFiles: string) {
     runInVm(fs.readFileSync(snippetPath, "utf-8"));
     const [group, name] = getLastSnippetGroupAndName();
     this.runSnippet(group, name, path, skipFiles);
+  }
+
+  async loadAndTestFileSnippet(snippetPath: string, path: string, skipFiles: string) {
+    runInVm(fs.readFileSync(snippetPath, "utf-8"));
+    const [group, name] = getLastSnippetGroupAndName();
+    this.testSnippet(group, name, path, skipFiles);
   }
 
   loadAndRunSnippet(snippetName: string, path: string, skipFiles: string) {
@@ -200,12 +222,26 @@ class SynvertCommand extends Command {
     this.runSnippet(group, name, path, skipFiles);
   }
 
+  loadAndTestSnippet(snippetName: string, path: string, skipFiles: string) {
+    this.readSnippets();
+    const [group, name] = snippetName.split("/");
+    this.testSnippet(group, name, path, skipFiles);
+  }
+
   private runSnippet(group: string, name: string, path: string, skipFiles: string): void {
     if (path) Synvert.Configuration.path = path;
     if (skipFiles) Synvert.Configuration.skipFiles = skipFiles.split(",").map((skipFile) => skipFile.trim());
     console.log(`===== ${group}/${name} started =====`);
     Synvert.Rewriter.call(group, name);
     console.log(`===== ${group}/${name} done =====`);
+  }
+
+  private testSnippet(group: string, name: string, path: string, skipFiles: string): void {
+    if (path) Synvert.Configuration.path = path;
+    if (skipFiles) Synvert.Configuration.skipFiles = skipFiles.split(",").map((skipFile) => skipFile.trim());
+    const rewriter = Synvert.Rewriter.fetch(group, name);
+    const result = rewriter.test();
+    console.log(JSON.stringify(result));
   }
 
   private readSnippets() {
@@ -229,7 +265,7 @@ SynvertCommand.flags = {
   show: flags.string({ char: "s", description: "show a snippet with snippet name" }),
   generate: flags.string({ char: "g", description: "generate a snippet with snippet name" }),
   run: flags.string({ char: "r", description: "run a snippet with snippet name, or local file path, or remote http url" }),
-  test: flags.string({ char: "t", description: "test a snippet with snippet name" }),
+  test: flags.string({ char: "t", description: "test a snippet with snippet name, or local file path, or remote http url" }),
   format: flags.string({ char: "f", description: "output format" }),
   showRunProcess: flags.boolean({ default: false, description: "show processing files when running a snippet" }),
   enableEcmaFeaturesJsx: flags.boolean({ default: false, description: "enable EcmaFeatures jsx" }),
