@@ -50,12 +50,11 @@ USAGE
   $ synvert-javascript
 
 OPTIONS
-  -d, --load=load          load custom snippets, snippet paths can be local file path or remote http url
   -f, --format=format      output format
   -g, --generate=generate  generate a snippet with snippet name
   -h, --help               show CLI help
   -l, --list               list snippets
-  -r, --run=run            run a snippet with snippet name
+  -r, --run=run            run a snippet with snippet name, or local file path, or remote http url
   -s, --show=show          show a snippet with snippet name
   -v, --version
   --enableEcmaFeaturesJsx  enable EcmaFeatures jsx
@@ -103,12 +102,16 @@ Run a snippet, analyze and then rewrite code.
 $ synvert-javascript --run jquery/migrate
 ```
 
-Coad custom snippet.
+Run a snippet from remote url.
 
 ```
-$ synvert-javascript --load https://raw.githubusercontent.com/xinminlabs/synvert-snippets-javascript/master/lib/javascript/no-useless-constructor.js --run javascript/no-useless-constructor
+$ synvert-javascript --run https://raw.githubusercontent.com/xinminlabs/synvert-snippets-javascript/master/lib/javascript/no-useless-constructor.js
+```
 
-$ synvert-javascript --load ~/Sites/xinminlabs/synvert-snippets-javascript/lib/jquery/deprecate-event-shorthand.js --run javascript/no-useless-constructor
+Run a snippet from local file.
+
+```
+$ synvert-javascript --run ~/Sites/xinminlabs/synvert-snippets-javascript/lib/jquery/deprecate-event-shorthand.js
 ```
 
 Show processing files when running a snippet.

@@ -7,7 +7,7 @@ import compareVersions from "compare-versions";
 import fs from "fs";
 import * as Synvert from "synvert-core";
 import dedent from "dedent-js";
-import { NodeVM } from "vm2";
+import { getLastSnippetGroupAndName, isValidFile, isValidUrl, runInVm } from "./utils";
 const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
 const espree = require("@xinminlabs/espree");
@@ -29,11 +29,8 @@ type Snippet = {
   }
 }
 
-const vm = new NodeVM({ sandbox: global, require: { external: true }, eval: false });
-
 class SynvertCommand extends Command {
   private format!: string;
-  private load: string = "";
 
   async run(): Promise<void> {
     const { flags } = this.parse(SynvertCommand);
@@ -43,7 +40,6 @@ class SynvertCommand extends Command {
     if (flags.format) {
       this.format = flags.format;
     }
-    this.load = flags.load || "";
     if (flags.sync) {
       return await this.syncSnippets();
     }
@@ -65,8 +61,13 @@ class SynvertCommand extends Command {
       Synvert.Configuration.enableEcmaFeaturesJsx = true;
     }
     if (flags.run) {
-      this.readSnippets();
-      return this.runSnippet(flags.run, flags.path, flags.skipFiles);
+      if (isValidUrl(flags.run)) {
+        return await this.loadAndRunUrlSnippet(flags.run, flags.path, flags.skipFiles);
+      }
+      if (isValidFile(flags.run)) {
+        return await this.loadAndRunFileSnippet(flags.run, flags.path, flags.skipFiles);
+      }
+      return this.loadAndRunSnippet(flags.run, flags.path, flags.skipFiles);
     }
   }
 
@@ -180,21 +181,39 @@ class SynvertCommand extends Command {
     console.log(`${snippetName} snippet is generated.`);
   }
 
-  runSnippet(snippetName: string, path: string, skipFiles: string): void {
+  async loadAndRunUrlSnippet(urlString: string, path: string, skipFiles: string) {
+    const response = await fetch(urlString);
+    runInVm(await response.text());
+    const [group, name] = getLastSnippetGroupAndName();
+    this.runSnippet(group, name, path, skipFiles);
+  }
+
+  async loadAndRunFileSnippet(snippetPath: string, path: string, skipFiles: string) {
+    runInVm(fs.readFileSync(snippetPath, "utf-8"));
+    const [group, name] = getLastSnippetGroupAndName();
+    this.runSnippet(group, name, path, skipFiles);
+  }
+
+  loadAndRunSnippet(snippetName: string, path: string, skipFiles: string) {
+    this.readSnippets();
+    const [group, name] = snippetName.split("/");
+    this.runSnippet(group, name, path, skipFiles);
+  }
+
+  private runSnippet(group: string, name: string, path: string, skipFiles: string): void {
     if (path) Synvert.Configuration.path = path;
     if (skipFiles) Synvert.Configuration.skipFiles = skipFiles.split(",").map((skipFile) => skipFile.trim());
-    console.log(`===== ${snippetName} started =====`);
-    const [group, name] = snippetName.split("/");
+    console.log(`===== ${group}/${name} started =====`);
     Synvert.Rewriter.call(group, name);
-    console.log(`===== ${snippetName} done =====`);
+    console.log(`===== ${group}/${name} done =====`);
   }
 
-  readSnippets() {
+  private readSnippets() {
     const snippetsHome = this.snippetsHome();
-    glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => vm.run(fs.readFileSync(filePath, "utf-8"), "node_modules"));
+    glob.sync(path.join(snippetsHome, "lib/**/*.js")).forEach((filePath) => runInVm(fs.readFileSync(filePath, "utf-8")));
   }
 
-  snippetsHome() {
+  private snippetsHome() {
     return process.env.SYNVERT_SNIPPETS_HOME || path.join(process.env.HOME!, ".synvert-javascript");
   }
 }
@@ -209,13 +228,9 @@ SynvertCommand.flags = {
   list: flags.boolean({ char: "l", description: "list snippets" }),
   show: flags.string({ char: "s", description: "show a snippet with snippet name" }),
   generate: flags.string({ char: "g", description: "generate a snippet with snippet name" }),
-  run: flags.string({ char: "r", description: "run a snippet with snippet name" }),
+  run: flags.string({ char: "r", description: "run a snippet with snippet name, or local file path, or remote http url" }),
   test: flags.string({ char: "t", description: "test a snippet with snippet name" }),
   format: flags.string({ char: "f", description: "output format" }),
-  load: flags.string({
-    char: "d",
-    description: "load custom snippets, snippet paths can be local file path or remote http url",
-  }),
   showRunProcess: flags.boolean({ default: false, description: "show processing files when running a snippet" }),
   enableEcmaFeaturesJsx: flags.boolean({ default: false, description: "enable EcmaFeatures jsx" }),
   skipFiles: flags.string({ default: "node_modules/**", description: "skip files, splitted by comma" }),
