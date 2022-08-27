@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## 1.2.3 (2022-08-27)
+## 1.3.0 (2022-07-27)
 
+* Fix NodeVM `require.resolve` for global npm package
 * Fix npm package
 
 ## 1.2.0 (2022-08-27)
