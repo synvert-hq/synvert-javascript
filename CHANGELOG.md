@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.1 (2022-08-27)
+
+* prepack depends on npm run build
+
 ## 1.2.0 (2022-08-27)
 
 * Test a snippet
