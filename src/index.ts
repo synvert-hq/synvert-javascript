@@ -78,6 +78,17 @@ class SynvertCommand extends Command {
       }
       return this.loadAndTestSnippet(flags.test, flags.path, flags.skipFiles);
     }
+    if (flags.execute) {
+      process.stdin.on('data', data => {
+        if (flags.execute === "test") {
+          this.loadAndTestInputSnippet(data.toString(), flags.path, flags.skipFiles);
+        } else {
+          this.loadAndRunInputSnippet(data.toString(), flags.path, flags.skipFiles);
+        }
+        process.exit();
+      });
+      return;
+    }
   }
 
   showVersion(): void {
@@ -216,6 +227,18 @@ class SynvertCommand extends Command {
     this.testSnippet(group, name, path, skipFiles);
   }
 
+  loadAndRunInputSnippet(input: string, path: string, skipFiles: string) {
+    runInVm(input);
+    const [group, name] = getLastSnippetGroupAndName();
+    this.runSnippet(group, name, path, skipFiles);
+  }
+
+  loadAndTestInputSnippet(input: string, path: string, skipFiles: string) {
+    runInVm(input);
+    const [group, name] = getLastSnippetGroupAndName();
+    this.testSnippet(group, name, path, skipFiles);
+  }
+
   loadAndRunSnippet(snippetName: string, path: string, skipFiles: string) {
     this.readSnippets();
     const [group, name] = snippetName.split("/");
@@ -265,6 +288,7 @@ SynvertCommand.flags = {
   show: flags.string({ char: "s", description: "show a snippet with snippet name" }),
   generate: flags.string({ char: "g", description: "generate a snippet with snippet name" }),
   run: flags.string({ char: "r", description: "run a snippet with snippet name, or local file path, or remote http url" }),
+  execute: flags.string({ char: "e", description: "execute a snippet, run or test" }),
   test: flags.string({ char: "t", description: "test a snippet with snippet name, or local file path, or remote http url" }),
   format: flags.string({ char: "f", description: "output format" }),
   showRunProcess: flags.boolean({ default: false, description: "show processing files when running a snippet" }),
