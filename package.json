@@ -32,7 +32,7 @@
   "repository": "xinminlabs/synvert-javascript",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
-    "prepack": "oclif-dev readme",
+    "prepack": "npm run build && oclif-dev readme",
     "test": "echo NO TESTS",
     "version": "oclif-dev readme && git add README.md"
   },
