@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.2.0 (2022-08-27)
+
+* Test a snippet
+* Execute a snippet
+* Update `synvert-core` to 1.6.4
+
 ## 1.1.0 (2022-08-20)
 
 * Rename `loadSnippets` to `readSnippets`
