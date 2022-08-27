@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## 1.2.2 (2022-08-27)
+## 1.2.3 (2022-08-27)
 
-* prepack depends on npm run build
+* Fix npm package
 
 ## 1.2.0 (2022-08-27)
 
