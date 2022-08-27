@@ -5,15 +5,19 @@ import { Rewriter } from "synvert-core";
 
 export const runInVm = (script: string): void => {
   // @ts-ignore
-  const vm = new NodeVM({ sandbox: global, require: { external: true, resolve: require.resolve }, eval: false });
+  const vm = new NodeVM({
+    sandbox: global,
+    require: { external: true, resolve: require.resolve },
+    eval: false,
+  });
   vm.run(script, "./vm.js");
-}
+};
 
 export const getLastSnippetGroupAndName = (): [string, string] => {
   const group = Object.keys(Rewriter.rewriters)[0];
   const name = Object.keys(Rewriter.rewriters[group])[0];
   return [group, name];
-}
+};
 
 export const isValidUrl = (urlString: string): boolean => {
   try {
@@ -22,7 +26,7 @@ export const isValidUrl = (urlString: string): boolean => {
   } catch {
     return false;
   }
-}
+};
 
 export const isValidFile = (path: string): boolean => {
   try {
@@ -31,4 +35,4 @@ export const isValidFile = (path: string): boolean => {
   } catch {
     return false;
   }
-}
+};
