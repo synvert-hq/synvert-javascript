@@ -4,9 +4,9 @@ import { NodeVM } from "vm2";
 import { Rewriter } from "synvert-core";
 
 export const runInVm = (script: string): void => {
-  // @ts-ignore
   const vm = new NodeVM({
     sandbox: global,
+    // @ts-ignore
     require: { external: true, resolve: require.resolve },
     eval: false,
   });

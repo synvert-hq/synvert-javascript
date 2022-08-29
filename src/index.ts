@@ -70,6 +70,7 @@ class SynvertCommand extends Command {
         return await this.loadAndRunUrlSnippet(
           flags.run,
           flags.path,
+          flags.onlyPaths,
           flags.skipFiles
         );
       }
@@ -77,16 +78,18 @@ class SynvertCommand extends Command {
         return await this.loadAndRunFileSnippet(
           flags.run,
           flags.path,
+          flags.onlyPaths,
           flags.skipFiles
         );
       }
-      return this.loadAndRunSnippet(flags.run, flags.path, flags.skipFiles);
+      return this.loadAndRunSnippet(flags.run, flags.path, flags.onlyPaths, flags.skipFiles);
     }
     if (flags.test) {
       if (isValidUrl(flags.test)) {
         return await this.loadAndTestUrlSnippet(
           flags.test,
           flags.path,
+          flags.onlyPaths,
           flags.skipFiles
         );
       }
@@ -94,10 +97,11 @@ class SynvertCommand extends Command {
         return await this.loadAndTestFileSnippet(
           flags.test,
           flags.path,
+          flags.onlyPaths,
           flags.skipFiles
         );
       }
-      return this.loadAndTestSnippet(flags.test, flags.path, flags.skipFiles);
+      return this.loadAndTestSnippet(flags.test, flags.path, flags.onlyPaths, flags.skipFiles);
     }
     if (flags.execute) {
       process.stdin.on("data", (data) => {
@@ -105,12 +109,14 @@ class SynvertCommand extends Command {
           this.loadAndTestInputSnippet(
             data.toString(),
             flags.path,
+            flags.onlyPaths,
             flags.skipFiles
           );
         } else {
           this.loadAndRunInputSnippet(
             data.toString(),
             flags.path,
+            flags.onlyPaths,
             flags.skipFiles
           );
         }
@@ -249,76 +255,85 @@ class SynvertCommand extends Command {
   async loadAndRunUrlSnippet(
     urlString: string,
     path: string,
+    onlyPaths: string,
     skipFiles: string
   ) {
     const response = await fetch(urlString);
     runInVm(await response.text());
     const [group, name] = getLastSnippetGroupAndName();
-    this.runSnippet(group, name, path, skipFiles);
+    this.runSnippet(group, name, path, onlyPaths, skipFiles);
   }
 
   async loadAndTestUrlSnippet(
     urlString: string,
     path: string,
+    onlyPaths: string,
     skipFiles: string
   ) {
     const response = await fetch(urlString);
     runInVm(await response.text());
     const [group, name] = getLastSnippetGroupAndName();
-    this.testSnippet(group, name, path, skipFiles);
+    this.testSnippet(group, name, path, onlyPaths, skipFiles);
   }
 
   async loadAndRunFileSnippet(
     snippetPath: string,
     path: string,
+    onlyPaths: string,
     skipFiles: string
   ) {
     runInVm(fs.readFileSync(snippetPath, "utf-8"));
     const [group, name] = getLastSnippetGroupAndName();
-    this.runSnippet(group, name, path, skipFiles);
+    this.runSnippet(group, name, path, onlyPaths, skipFiles);
   }
 
   async loadAndTestFileSnippet(
     snippetPath: string,
     path: string,
+    onlyPaths: string,
     skipFiles: string
   ) {
     runInVm(fs.readFileSync(snippetPath, "utf-8"));
     const [group, name] = getLastSnippetGroupAndName();
-    this.testSnippet(group, name, path, skipFiles);
+    this.testSnippet(group, name, path, onlyPaths, skipFiles);
   }
 
-  loadAndRunInputSnippet(input: string, path: string, skipFiles: string) {
+  loadAndRunInputSnippet(input: string, path: string, onlyPaths: string, skipFiles: string) {
     runInVm(input);
     const [group, name] = getLastSnippetGroupAndName();
-    this.runSnippet(group, name, path, skipFiles);
+    this.runSnippet(group, name, path, onlyPaths, skipFiles);
   }
 
-  loadAndTestInputSnippet(input: string, path: string, skipFiles: string) {
+  loadAndTestInputSnippet(input: string, path: string, onlyPaths: string, skipFiles: string) {
     runInVm(input);
     const [group, name] = getLastSnippetGroupAndName();
-    this.testSnippet(group, name, path, skipFiles);
+    this.testSnippet(group, name, path, onlyPaths, skipFiles);
   }
 
-  loadAndRunSnippet(snippetName: string, path: string, skipFiles: string) {
+  loadAndRunSnippet(snippetName: string, path: string, onlyPaths: string, skipFiles: string) {
     this.readSnippets();
     const [group, name] = snippetName.split("/");
-    this.runSnippet(group, name, path, skipFiles);
+    this.runSnippet(group, name, path, onlyPaths, skipFiles);
   }
 
-  loadAndTestSnippet(snippetName: string, path: string, skipFiles: string) {
+  loadAndTestSnippet(snippetName: string, path: string, onlyPaths: string, skipFiles: string) {
     this.readSnippets();
     const [group, name] = snippetName.split("/");
-    this.testSnippet(group, name, path, skipFiles);
+    this.testSnippet(group, name, path, onlyPaths, skipFiles);
   }
 
   private runSnippet(
     group: string,
     name: string,
     path: string,
+    onlyPaths: string,
     skipFiles: string
   ): void {
     if (path) Synvert.Configuration.path = path;
+    if (onlyPaths)
+      Synvert.Configuration.onlyPaths = onlyPaths
+        .split(",")
+        .map((onlyFile) => onlyFile.trim());
     if (skipFiles)
       Synvert.Configuration.skipFiles = skipFiles
         .split(",")
@@ -332,9 +347,14 @@ class SynvertCommand extends Command {
     group: string,
     name: string,
     path: string,
+    onlyPaths: string,
     skipFiles: string
   ): void {
     if (path) Synvert.Configuration.path = path;
+    if (onlyPaths)
+      Synvert.Configuration.onlyPaths = onlyPaths
+        .split(",")
+        .map((onlyFile) => onlyFile.trim());
     if (skipFiles)
       Synvert.Configuration.skipFiles = skipFiles
         .split(",")
@@ -398,8 +418,12 @@ SynvertCommand.flags = {
     default: false,
     description: "enable EcmaFeatures jsx",
   }),
+  onlyPaths: flags.string({
+    default: "",
+    description: "only paths, splitted by comma",
+  }),
   skipFiles: flags.string({
-    default: "node_modules/**",
+    default: "**/node_modules/**",
     description: "skip files, splitted by comma",
   }),
   path: flags.string({ default: ".", description: "project path" }),
