@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 1.4.0 (2022-08-30)
+
+* Update `synvert-core` to 1.8.0
+* Rename `path` option to `rootPath`
+* Rename `skipFiles` option to `skipPaths`
+* Add `onlyPaths` option
+
 ## 1.3.0 (2022-07-27)
 
 * Fix NodeVM `require.resolve` for global npm package
