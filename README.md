@@ -59,7 +59,7 @@ OPTIONS
   -v, --version
   --enableEcmaFeaturesJsx  enable EcmaFeatures jsx
   --onlyPaths=onlyPaths    only paths, splitted by comma
-  --path=path              [default: .] project path
+  --rootPath=rootPath      [default: .] project root path
   --showRunProcess         show processing files when running a snippet
   --skipPaths=skipPaths    [default: **/node_modules/**] skip paths, splitted by comma
   --sync                   sync snippets
@@ -130,19 +130,19 @@ $ synvert-javascript --run javascript/no-useless-constructor --enableEcmaFeature
 Skip paths.
 
 ```
-$ synvert-javascript --run javascript/no-useless-constructor --skipPaths=**/node_modules/**,**/dist/**
+$ synvert-javascript --run javascript/no-useless-constructor --skipPaths **/node_modules/**,**/dist/**
 ```
 
 Only paths.
 
 ```
-$ synvert-javascript --run javascript/no-useless-constructor --onlyPaths=frontend/src/javascripts
+$ synvert-javascript --run javascript/no-useless-constructor --onlyPaths frontend/src/javascripts
 ```
 
-Customize path.
+Root path.
 
 ```
-$ synvert-javascript --run javascript/no-useless-constructor --path=/repos/synvert
+$ synvert-javascript --run javascript/no-useless-constructor --rootPath /repos/synvert
 ```
 
 #### Generate a snippet
