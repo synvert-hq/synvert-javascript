@@ -58,9 +58,10 @@ OPTIONS
   -s, --show=show          show a snippet with snippet name
   -v, --version
   --enableEcmaFeaturesJsx  enable EcmaFeatures jsx
+  --onlyPaths=onlyPaths    only paths, splitted by comma
   --path=path              [default: .] project path
   --showRunProcess         show processing files when running a snippet
-  --skipFiles=skipFiles    [default: node_modules/**] skip files, splitted by comma
+  --skipPaths=skipPaths    [default: **/node_modules/**] skip paths, splitted by comma
   --sync                   sync snippets
 ```
 
@@ -126,10 +127,16 @@ Enable EcmaFeatures jsx.
 $ synvert-javascript --run javascript/no-useless-constructor --enableEcmaFeaturesJsx
 ```
 
-Skip files.
+Skip paths.
 
 ```
-$ synvert-javascript --run javascript/no-useless-constructor --skipFiles=test/**
+$ synvert-javascript --run javascript/no-useless-constructor --skipPaths=**/node_modules/**,**/dist/**
+```
+
+Only paths.
+
+```
+$ synvert-javascript --run javascript/no-useless-constructor --onlyPaths=frontend/src/javascripts
 ```
 
 Customize path.

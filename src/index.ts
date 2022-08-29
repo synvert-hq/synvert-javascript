@@ -71,7 +71,7 @@ class SynvertCommand extends Command {
           flags.run,
           flags.path,
           flags.onlyPaths,
-          flags.skipFiles
+          flags.skipPaths
         );
       }
       if (isValidFile(flags.run)) {
@@ -79,10 +79,10 @@ class SynvertCommand extends Command {
           flags.run,
           flags.path,
           flags.onlyPaths,
-          flags.skipFiles
+          flags.skipPaths
         );
       }
-      return this.loadAndRunSnippet(flags.run, flags.path, flags.onlyPaths, flags.skipFiles);
+      return this.loadAndRunSnippet(flags.run, flags.path, flags.onlyPaths, flags.skipPaths);
     }
     if (flags.test) {
       if (isValidUrl(flags.test)) {
@@ -90,7 +90,7 @@ class SynvertCommand extends Command {
           flags.test,
           flags.path,
           flags.onlyPaths,
-          flags.skipFiles
+          flags.skipPaths
         );
       }
       if (isValidFile(flags.test)) {
@@ -98,10 +98,10 @@ class SynvertCommand extends Command {
           flags.test,
           flags.path,
           flags.onlyPaths,
-          flags.skipFiles
+          flags.skipPaths
         );
       }
-      return this.loadAndTestSnippet(flags.test, flags.path, flags.onlyPaths, flags.skipFiles);
+      return this.loadAndTestSnippet(flags.test, flags.path, flags.onlyPaths, flags.skipPaths);
     }
     if (flags.execute) {
       process.stdin.on("data", (data) => {
@@ -110,14 +110,14 @@ class SynvertCommand extends Command {
             data.toString(),
             flags.path,
             flags.onlyPaths,
-            flags.skipFiles
+            flags.skipPaths
           );
         } else {
           this.loadAndRunInputSnippet(
             data.toString(),
             flags.path,
             flags.onlyPaths,
-            flags.skipFiles
+            flags.skipPaths
           );
         }
         process.exit();
@@ -256,70 +256,70 @@ class SynvertCommand extends Command {
     urlString: string,
     path: string,
     onlyPaths: string,
-    skipFiles: string
+    skipPaths: string
   ) {
     const response = await fetch(urlString);
     runInVm(await response.text());
     const [group, name] = getLastSnippetGroupAndName();
-    this.runSnippet(group, name, path, onlyPaths, skipFiles);
+    this.runSnippet(group, name, path, onlyPaths, skipPaths);
   }
 
   async loadAndTestUrlSnippet(
     urlString: string,
     path: string,
     onlyPaths: string,
-    skipFiles: string
+    skipPaths: string
   ) {
     const response = await fetch(urlString);
     runInVm(await response.text());
     const [group, name] = getLastSnippetGroupAndName();
-    this.testSnippet(group, name, path, onlyPaths, skipFiles);
+    this.testSnippet(group, name, path, onlyPaths, skipPaths);
   }
 
   async loadAndRunFileSnippet(
     snippetPath: string,
     path: string,
     onlyPaths: string,
-    skipFiles: string
+    skipPaths: string
   ) {
     runInVm(fs.readFileSync(snippetPath, "utf-8"));
     const [group, name] = getLastSnippetGroupAndName();
-    this.runSnippet(group, name, path, onlyPaths, skipFiles);
+    this.runSnippet(group, name, path, onlyPaths, skipPaths);
   }
 
   async loadAndTestFileSnippet(
     snippetPath: string,
     path: string,
     onlyPaths: string,
-    skipFiles: string
+    skipPaths: string
   ) {
     runInVm(fs.readFileSync(snippetPath, "utf-8"));
     const [group, name] = getLastSnippetGroupAndName();
-    this.testSnippet(group, name, path, onlyPaths, skipFiles);
+    this.testSnippet(group, name, path, onlyPaths, skipPaths);
   }
 
-  loadAndRunInputSnippet(input: string, path: string, onlyPaths: string, skipFiles: string) {
+  loadAndRunInputSnippet(input: string, path: string, onlyPaths: string, skipPaths: string) {
     runInVm(input);
     const [group, name] = getLastSnippetGroupAndName();
-    this.runSnippet(group, name, path, onlyPaths, skipFiles);
+    this.runSnippet(group, name, path, onlyPaths, skipPaths);
   }
 
-  loadAndTestInputSnippet(input: string, path: string, onlyPaths: string, skipFiles: string) {
+  loadAndTestInputSnippet(input: string, path: string, onlyPaths: string, skipPaths: string) {
     runInVm(input);
     const [group, name] = getLastSnippetGroupAndName();
-    this.testSnippet(group, name, path, onlyPaths, skipFiles);
+    this.testSnippet(group, name, path, onlyPaths, skipPaths);
   }
 
-  loadAndRunSnippet(snippetName: string, path: string, onlyPaths: string, skipFiles: string) {
+  loadAndRunSnippet(snippetName: string, path: string, onlyPaths: string, skipPaths: string) {
     this.readSnippets();
     const [group, name] = snippetName.split("/");
-    this.runSnippet(group, name, path, onlyPaths, skipFiles);
+    this.runSnippet(group, name, path, onlyPaths, skipPaths);
   }
 
-  loadAndTestSnippet(snippetName: string, path: string, onlyPaths: string, skipFiles: string) {
+  loadAndTestSnippet(snippetName: string, path: string, onlyPaths: string, skipPaths: string) {
     this.readSnippets();
     const [group, name] = snippetName.split("/");
-    this.testSnippet(group, name, path, onlyPaths, skipFiles);
+    this.testSnippet(group, name, path, onlyPaths, skipPaths);
   }
 
   private runSnippet(
@@ -327,15 +327,15 @@ class SynvertCommand extends Command {
     name: string,
     path: string,
     onlyPaths: string,
-    skipFiles: string
+    skipPaths: string
   ): void {
     if (path) Synvert.Configuration.path = path;
     if (onlyPaths)
       Synvert.Configuration.onlyPaths = onlyPaths
         .split(",")
         .map((onlyFile) => onlyFile.trim());
-    if (skipFiles)
-      Synvert.Configuration.skipFiles = skipFiles
+    if (skipPaths)
+      Synvert.Configuration.skipPaths = skipPaths
         .split(",")
         .map((skipFile) => skipFile.trim());
     console.log(`===== ${group}/${name} started =====`);
@@ -348,15 +348,15 @@ class SynvertCommand extends Command {
     name: string,
     path: string,
     onlyPaths: string,
-    skipFiles: string
+    skipPaths: string
   ): void {
     if (path) Synvert.Configuration.path = path;
     if (onlyPaths)
       Synvert.Configuration.onlyPaths = onlyPaths
         .split(",")
         .map((onlyFile) => onlyFile.trim());
-    if (skipFiles)
-      Synvert.Configuration.skipFiles = skipFiles
+    if (skipPaths)
+      Synvert.Configuration.skipPaths = skipPaths
         .split(",")
         .map((skipFile) => skipFile.trim());
     const rewriter = Synvert.Rewriter.fetch(group, name);
@@ -422,9 +422,9 @@ SynvertCommand.flags = {
     default: "",
     description: "only paths, splitted by comma",
   }),
-  skipFiles: flags.string({
+  skipPaths: flags.string({
     default: "**/node_modules/**",
-    description: "skip files, splitted by comma",
+    description: "skip paths, splitted by comma",
   }),
   path: flags.string({ default: ".", description: "project path" }),
 };
