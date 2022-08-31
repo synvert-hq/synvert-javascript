@@ -6,6 +6,7 @@ import glob from "glob";
 import compareVersions from "compare-versions";
 import fs from "fs";
 import * as Synvert from "synvert-core";
+import ts from "typescript";
 import dedent from "dedent-js";
 import {
   getLastSnippetGroupAndName,
@@ -139,7 +140,7 @@ class SynvertCommand extends Command {
   showVersion(): void {
     const pjson = require("../package.json");
     console.log(
-      `${pjson.version} (with synvert-core ${Synvert.version} and espree ${espree.version})`
+      `${pjson.version} (with synvert-core ${Synvert.version} and espree ${espree.version}) and typescript ${ts.version}`
     );
   }
 
