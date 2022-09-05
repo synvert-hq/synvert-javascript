@@ -12,6 +12,7 @@ import {
   getLastSnippetGroupAndName,
   isValidFile,
   isValidUrl,
+  formatUrl,
   runInVm,
 } from "./utils";
 const stat = promisify(fs.stat);
@@ -269,7 +270,7 @@ class SynvertCommand extends Command {
     onlyPaths: string,
     skipPaths: string
   ) {
-    const response = await fetch(urlString);
+    const response = await fetch(formatUrl(urlString));
     runInVm(await response.text());
     const [group, name] = getLastSnippetGroupAndName();
     this.runSnippet(group, name, rootPath, onlyPaths, skipPaths);
@@ -281,7 +282,7 @@ class SynvertCommand extends Command {
     onlyPaths: string,
     skipPaths: string
   ) {
-    const response = await fetch(urlString);
+    const response = await fetch(formatUrl(urlString));
     runInVm(await response.text());
     const [group, name] = getLastSnippetGroupAndName();
     this.testSnippet(group, name, rootPath, onlyPaths, skipPaths);
