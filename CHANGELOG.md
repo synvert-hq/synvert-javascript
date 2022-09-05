@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.5.0 (2022-09-05)
+
+* Update `synvert-core` to 1.9.5
+* Convert to github raw url
+
 ## 1.4.0 (2022-08-30)
 
 * Update `synvert-core` to 1.8.0
