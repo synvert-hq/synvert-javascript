@@ -39,11 +39,13 @@ export const isValidFile = (path: string): boolean => {
 
 export const formatUrl = (url: string): string => {
   return convertToGithubRawUrl(url);
-}
+};
 
 const convertToGithubRawUrl = (url: string): string => {
-  if (!url.includes('//github.com/')) {
+  if (!url.includes("//github.com/")) {
     return url;
   }
-  return url.replace('//github.com/', '//raw.githubusercontent.com/').replace('/blob/', '/');
-}
+  return url
+    .replace("//github.com/", "//raw.githubusercontent.com/")
+    .replace("/blob/", "/");
+};
