@@ -1,6 +1,6 @@
 # synvert
 
-<img src="https://synvert.xinminlabs.com/img/logo_96.png" alt="logo" width="32" height="32" />
+<img src="https://synvert.net/img/logo_96.png" alt="logo" width="32" height="32" />
 
 [![Version](https://img.shields.io/npm/v/synvert.svg)](https://npmjs.org/package/synvert)
 [![AwesomeCode Status for xinminlabs/synvert-javascript](https://awesomecode.io/projects/a211af53-b83c-49e0-b12f-985463cbf297/status)](https://awesomecode.io/repos/xinminlabs/synvert-javascript)
