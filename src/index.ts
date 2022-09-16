@@ -72,25 +72,17 @@ class SynvertCommand extends Command {
       this.runSnippet(group, name, flags.rootPath, flags.onlyPaths, flags.skipPaths);
     }
     if (flags.test) {
-      const [group, name] = await this.findSnippetName(flags.run);
+      const [group, name] = await this.findSnippetName(flags.test);
       this.testSnippet(group, name, flags.rootPath, flags.onlyPaths, flags.skipPaths);
     }
     if (flags.execute) {
       process.stdin.on("data", (data) => {
         if (flags.execute === "test") {
-          this.loadAndTestInputSnippet(
-            data.toString(),
-            flags.rootPath,
-            flags.onlyPaths,
-            flags.skipPaths
-          );
+          const [group, name] = this.findSnippetNameByInput(data.toString());
+          this.testSnippet(group, name, flags.rootPath, flags.onlyPaths, flags.skipPaths);
         } else {
-          this.loadAndRunInputSnippet(
-            data.toString(),
-            flags.rootPath,
-            flags.onlyPaths,
-            flags.skipPaths
-          );
+          const [group, name] = this.findSnippetNameByInput(data.toString());
+          this.runSnippet(group, name, flags.rootPath, flags.onlyPaths, flags.skipPaths);
         }
         process.exit();
       });
@@ -233,32 +225,16 @@ class SynvertCommand extends Command {
       runInVm(fs.readFileSync(snippetName, "utf-8"));
       return getLastSnippetGroupAndName();
     } else {
-      this.readSnippets();
+      const snippetsHome = this.snippetsHome();
+      runInVm(path.join(snippetsHome, 'lib', `${snippetName}.js`));
       const [group, name] = snippetName.split("/");
       return [group, name];
     }
   }
 
-  loadAndRunInputSnippet(
-    input: string,
-    rootPath: string,
-    onlyPaths: string,
-    skipPaths: string
-  ) {
+  findSnippetNameByInput(input: string): [string, string] {
     runInVm(input);
-    const [group, name] = getLastSnippetGroupAndName();
-    this.runSnippet(group, name, rootPath, onlyPaths, skipPaths);
-  }
-
-  loadAndTestInputSnippet(
-    input: string,
-    rootPath: string,
-    onlyPaths: string,
-    skipPaths: string
-  ) {
-    runInVm(input);
-    const [group, name] = getLastSnippetGroupAndName();
-    this.testSnippet(group, name, rootPath, onlyPaths, skipPaths);
+    return getLastSnippetGroupAndName();
   }
 
   private runSnippet(
