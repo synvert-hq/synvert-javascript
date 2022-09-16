@@ -68,52 +68,12 @@ class SynvertCommand extends Command {
       Synvert.Configuration.enableEcmaFeaturesJsx = true;
     }
     if (flags.run) {
-      if (isValidUrl(flags.run)) {
-        return await this.loadAndRunUrlSnippet(
-          flags.run,
-          flags.rootPath,
-          flags.onlyPaths,
-          flags.skipPaths
-        );
-      }
-      if (isValidFile(flags.run)) {
-        return await this.loadAndRunFileSnippet(
-          flags.run,
-          flags.rootPath,
-          flags.onlyPaths,
-          flags.skipPaths
-        );
-      }
-      return this.loadAndRunSnippet(
-        flags.run,
-        flags.rootPath,
-        flags.onlyPaths,
-        flags.skipPaths
-      );
+      const [group, name] = await this.findSnippetName(flags.run);
+      this.runSnippet(group, name, flags.rootPath, flags.onlyPaths, flags.skipPaths);
     }
     if (flags.test) {
-      if (isValidUrl(flags.test)) {
-        return await this.loadAndTestUrlSnippet(
-          flags.test,
-          flags.rootPath,
-          flags.onlyPaths,
-          flags.skipPaths
-        );
-      }
-      if (isValidFile(flags.test)) {
-        return await this.loadAndTestFileSnippet(
-          flags.test,
-          flags.rootPath,
-          flags.onlyPaths,
-          flags.skipPaths
-        );
-      }
-      return this.loadAndTestSnippet(
-        flags.test,
-        flags.rootPath,
-        flags.onlyPaths,
-        flags.skipPaths
-      );
+      const [group, name] = await this.findSnippetName(flags.run);
+      this.testSnippet(group, name, flags.rootPath, flags.onlyPaths, flags.skipPaths);
     }
     if (flags.execute) {
       process.stdin.on("data", (data) => {
@@ -264,50 +224,19 @@ class SynvertCommand extends Command {
     console.log(`${snippetName} snippet is generated.`);
   }
 
-  async loadAndRunUrlSnippet(
-    urlString: string,
-    rootPath: string,
-    onlyPaths: string,
-    skipPaths: string
-  ) {
-    const response = await fetch(formatUrl(urlString));
-    runInVm(await response.text());
-    const [group, name] = getLastSnippetGroupAndName();
-    this.runSnippet(group, name, rootPath, onlyPaths, skipPaths);
-  }
-
-  async loadAndTestUrlSnippet(
-    urlString: string,
-    rootPath: string,
-    onlyPaths: string,
-    skipPaths: string
-  ) {
-    const response = await fetch(formatUrl(urlString));
-    runInVm(await response.text());
-    const [group, name] = getLastSnippetGroupAndName();
-    this.testSnippet(group, name, rootPath, onlyPaths, skipPaths);
-  }
-
-  async loadAndRunFileSnippet(
-    snippetPath: string,
-    rootPath: string,
-    onlyPaths: string,
-    skipPaths: string
-  ) {
-    runInVm(fs.readFileSync(snippetPath, "utf-8"));
-    const [group, name] = getLastSnippetGroupAndName();
-    this.runSnippet(group, name, rootPath, onlyPaths, skipPaths);
-  }
-
-  async loadAndTestFileSnippet(
-    snippetPath: string,
-    rootPath: string,
-    onlyPaths: string,
-    skipPaths: string
-  ) {
-    runInVm(fs.readFileSync(snippetPath, "utf-8"));
-    const [group, name] = getLastSnippetGroupAndName();
-    this.testSnippet(group, name, rootPath, onlyPaths, skipPaths);
+  async findSnippetName(snippetName: string): Promise<[string, string]> {
+    if (isValidUrl(snippetName)) {
+      const response = await fetch(formatUrl(snippetName));
+      runInVm(await response.text());
+      return getLastSnippetGroupAndName();
+    } else if (isValidFile(snippetName)) {
+      runInVm(fs.readFileSync(snippetName, "utf-8"));
+      return getLastSnippetGroupAndName();
+    } else {
+      this.readSnippets();
+      const [group, name] = snippetName.split("/");
+      return [group, name];
+    }
   }
 
   loadAndRunInputSnippet(
@@ -329,28 +258,6 @@ class SynvertCommand extends Command {
   ) {
     runInVm(input);
     const [group, name] = getLastSnippetGroupAndName();
-    this.testSnippet(group, name, rootPath, onlyPaths, skipPaths);
-  }
-
-  loadAndRunSnippet(
-    snippetName: string,
-    rootPath: string,
-    onlyPaths: string,
-    skipPaths: string
-  ) {
-    this.readSnippets();
-    const [group, name] = snippetName.split("/");
-    this.runSnippet(group, name, rootPath, onlyPaths, skipPaths);
-  }
-
-  loadAndTestSnippet(
-    snippetName: string,
-    rootPath: string,
-    onlyPaths: string,
-    skipPaths: string
-  ) {
-    this.readSnippets();
-    const [group, name] = snippetName.split("/");
     this.testSnippet(group, name, rootPath, onlyPaths, skipPaths);
   }
 
