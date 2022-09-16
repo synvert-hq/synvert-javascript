@@ -67,22 +67,35 @@ class SynvertCommand extends Command {
     if (flags.enableEcmaFeaturesJsx) {
       Synvert.Configuration.enableEcmaFeaturesJsx = true;
     }
+    if (flags.rootPath) {
+      Synvert.Configuration.rootPath = flags.rootPath;
+    }
+    if (flags.onlyPaths) {
+      Synvert.Configuration.onlyPaths = flags.onlyPaths
+        .split(",")
+        .map((onlyPath: string) => onlyPath.trim());
+    }
+    if (flags.skipPaths) {
+      Synvert.Configuration.skipPaths = flags.skipPaths
+        .split(",")
+        .map((skipPath: string) => skipPath.trim());
+    }
     if (flags.run) {
       const [group, name] = await this.findSnippetName(flags.run);
-      this.runSnippet(group, name, flags.rootPath, flags.onlyPaths, flags.skipPaths);
+      this.runSnippet(group, name);
     }
     if (flags.test) {
       const [group, name] = await this.findSnippetName(flags.test);
-      this.testSnippet(group, name, flags.rootPath, flags.onlyPaths, flags.skipPaths);
+      this.testSnippet(group, name);
     }
     if (flags.execute) {
       process.stdin.on("data", (data) => {
         if (flags.execute === "test") {
           const [group, name] = this.findSnippetNameByInput(data.toString());
-          this.testSnippet(group, name, flags.rootPath, flags.onlyPaths, flags.skipPaths);
+          this.testSnippet(group, name);
         } else {
           const [group, name] = this.findSnippetNameByInput(data.toString());
-          this.runSnippet(group, name, flags.rootPath, flags.onlyPaths, flags.skipPaths);
+          this.runSnippet(group, name);
         }
         process.exit();
       });
@@ -240,19 +253,7 @@ class SynvertCommand extends Command {
   private runSnippet(
     group: string,
     name: string,
-    rootPath: string,
-    onlyPaths: string,
-    skipPaths: string
   ): void {
-    if (rootPath) Synvert.Configuration.rootPath = rootPath;
-    if (onlyPaths)
-      Synvert.Configuration.onlyPaths = onlyPaths
-        .split(",")
-        .map((onlyFile) => onlyFile.trim());
-    if (skipPaths)
-      Synvert.Configuration.skipPaths = skipPaths
-        .split(",")
-        .map((skipFile) => skipFile.trim());
     console.log(`===== ${group}/${name} started =====`);
     Synvert.Rewriter.call(group, name);
     console.log(`===== ${group}/${name} done =====`);
@@ -261,19 +262,7 @@ class SynvertCommand extends Command {
   private testSnippet(
     group: string,
     name: string,
-    rootPath: string,
-    onlyPaths: string,
-    skipPaths: string
   ): void {
-    if (rootPath) Synvert.Configuration.rootPath = rootPath;
-    if (onlyPaths)
-      Synvert.Configuration.onlyPaths = onlyPaths
-        .split(",")
-        .map((onlyFile) => onlyFile.trim());
-    if (skipPaths)
-      Synvert.Configuration.skipPaths = skipPaths
-        .split(",")
-        .map((skipFile) => skipFile.trim());
     const rewriter = Synvert.Rewriter.fetch(group, name);
     const result = rewriter.test();
     console.log(JSON.stringify(result));
