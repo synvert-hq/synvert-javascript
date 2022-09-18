@@ -8,6 +8,7 @@ import fs from "fs";
 import * as Synvert from "synvert-core";
 import ts from "typescript";
 import dedent from "dedent-js";
+import snakecaseKeys from "snakecase-keys";
 import {
   getLastSnippetGroupAndName,
   isValidFile,
@@ -265,7 +266,7 @@ class SynvertCommand extends Command {
   ): void {
     const rewriter = Synvert.Rewriter.fetch(group, name);
     const result = rewriter.test();
-    console.log(JSON.stringify(result));
+    console.log(JSON.stringify(snakecaseKeys(result)));
   }
 
   private readSnippets() {
@@ -280,6 +281,10 @@ class SynvertCommand extends Command {
       process.env.SYNVERT_SNIPPETS_HOME ||
       path.join(process.env.HOME!, ".synvert-javascript")
     );
+  }
+
+  private camelToUnderscore(key: string): string {
+    return key.replace( /([A-Z])/g, "_$1").toLowerCase();
   }
 }
 
