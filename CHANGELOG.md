@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.1 (2022-09-18)
+
+* Snakecase keys in list json results
+
 ## 1.6.0 (2022-09-18)
 
 * Snakecase keys in test json results
