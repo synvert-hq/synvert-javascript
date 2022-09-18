@@ -167,7 +167,7 @@ class SynvertCommand extends Command {
           output.push(item);
         });
       });
-      console.log(JSON.stringify(output));
+      console.log(JSON.stringify(snakecaseKeys(output)));
     } else {
       Object.keys(rewriters).forEach((group) => {
         console.log(group);
