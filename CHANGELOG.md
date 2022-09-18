@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.0 (2022-09-18)
+
+* Snakecase keys in test json results
+
 ## 1.5.0 (2022-09-05)
 
 * Update `synvert-core` to 1.9.5
