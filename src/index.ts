@@ -240,7 +240,7 @@ class SynvertCommand extends Command {
       return getLastSnippetGroupAndName();
     } else {
       const snippetsHome = this.snippetsHome();
-      runInVm(path.join(snippetsHome, 'lib', `${snippetName}.js`));
+      runInVm(path.join(snippetsHome, "lib", `${snippetName}.js`));
       const [group, name] = snippetName.split("/");
       return [group, name];
     }
@@ -251,19 +251,13 @@ class SynvertCommand extends Command {
     return getLastSnippetGroupAndName();
   }
 
-  private runSnippet(
-    group: string,
-    name: string,
-  ): void {
+  private runSnippet(group: string, name: string): void {
     console.log(`===== ${group}/${name} started =====`);
     Synvert.Rewriter.call(group, name);
     console.log(`===== ${group}/${name} done =====`);
   }
 
-  private testSnippet(
-    group: string,
-    name: string,
-  ): void {
+  private testSnippet(group: string, name: string): void {
     const rewriter = Synvert.Rewriter.fetch(group, name);
     const result = rewriter.test();
     console.log(JSON.stringify(snakecaseKeys(result)));
@@ -284,7 +278,7 @@ class SynvertCommand extends Command {
   }
 
   private camelToUnderscore(key: string): string {
-    return key.replace( /([A-Z])/g, "_$1").toLowerCase();
+    return key.replace(/([A-Z])/g, "_$1").toLowerCase();
   }
 }
 
