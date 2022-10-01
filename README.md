@@ -67,7 +67,7 @@ OPTIONS
 
 ## Commands
 
-#### Sync snippets
+### Sync snippets
 
 [Official Snippets](https://github.com/xinminlabs/synvert-snippets-javascript) are available on github,
 you can sync them any time you want.
@@ -77,7 +77,7 @@ you can sync them any time you want.
 $ synvert-javascript --sync
 ```
 
-#### List snippets
+### List snippets
 
 List all available snippets.
 
@@ -87,7 +87,7 @@ $ synvert-javascript -l
 $ synvert-javascript --list --format json
 ```
 
-#### Show a snippet
+### Show a snippet
 
 Describe what a snippet does.
 
@@ -95,7 +95,7 @@ Describe what a snippet does.
 $ synvert-javascript -s jquery/migrate
 ```
 
-#### Run a snippet
+### Run a snippet
 
 Run a snippet, analyze and then rewrite code.
 
@@ -145,7 +145,7 @@ Root path.
 $ synvert-javascript --run javascript/no-useless-constructor --rootPath /repos/synvert
 ```
 
-#### Generate a snippet
+### Generate a snippet
 
 ```
 $ synvert-javascript -g javascript/convert-foo-to-bar
