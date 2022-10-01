@@ -1,0 +1,28 @@
+name: Deploy documentation
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Update gh-pages to docs
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 18
+      - name: Install required npm dependencies
+        run: npm install -g markdown-to-html
+      - name: Create docs
+        run: mkdir docs
+      - name: Generate docs
+        run: github-markdown README.md -s https://cdn.simplecss.org/simple-v1.css > docs/index.html
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./docs
