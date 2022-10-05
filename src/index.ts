@@ -9,13 +9,7 @@ import * as Synvert from "synvert-core";
 import ts from "typescript";
 import dedent from "dedent-js";
 import snakecaseKeys from "snakecase-keys";
-import {
-  getLastSnippetGroupAndName,
-  isValidFile,
-  isValidUrl,
-  formatUrl,
-  runInVm,
-} from "./utils";
+import { isValidFile, isValidUrl, formatUrl } from "./utils";
 const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
 const espree = require("@xinminlabs/espree");
@@ -83,23 +77,23 @@ class SynvertCommand extends Command {
     }
     if (flags.run) {
       this.readSnippets();
-      const [group, name] = await this.findSnippetName(flags.run);
-      this.runSnippet(group, name);
+      const rewriter = await this.evalSnippet(flags.run);
+      this.runSnippet(rewriter);
     }
     if (flags.test) {
       this.readSnippets();
-      const [group, name] = await this.findSnippetName(flags.test);
-      this.testSnippet(group, name);
+      const rewriter = await this.evalSnippet(flags.test);
+      this.testSnippet(rewriter);
     }
     if (flags.execute) {
       this.readSnippets();
       process.stdin.on("data", (data) => {
         if (flags.execute === "test") {
-          const [group, name] = this.findSnippetNameByInput(data.toString());
-          this.testSnippet(group, name);
+          const rewriter = this.evalSnippetByInput(data.toString());
+          this.testSnippet(rewriter);
         } else {
-          const [group, name] = this.findSnippetNameByInput(data.toString());
-          this.runSnippet(group, name);
+          const rewriter = this.evalSnippetByInput(data.toString());
+          this.runSnippet(rewriter);
         }
         process.exit();
       });
@@ -233,35 +227,29 @@ class SynvertCommand extends Command {
     console.log(`${snippetName} snippet is generated.`);
   }
 
-  async findSnippetName(snippetName: string): Promise<[string, string]> {
+  async evalSnippet(snippetName: string): Promise<Synvert.Rewriter> {
     if (isValidUrl(snippetName)) {
       const response = await fetch(formatUrl(snippetName));
-      runInVm(await response.text());
-      return getLastSnippetGroupAndName();
+      return eval(await response.text());
     } else if (isValidFile(snippetName)) {
-      runInVm(fs.readFileSync(snippetName, "utf-8"));
-      return getLastSnippetGroupAndName();
+      return eval(fs.readFileSync(snippetName, "utf-8"));
     } else {
       const snippetsHome = this.snippetsHome();
-      runInVm(path.join(snippetsHome, "lib", `${snippetName}.js`));
-      const [group, name] = snippetName.split("/");
-      return [group, name];
+      return eval(path.join(snippetsHome, "lib", `${snippetName}.js`));
     }
   }
 
-  findSnippetNameByInput(input: string): [string, string] {
-    runInVm(input);
-    return getLastSnippetGroupAndName();
+  evalSnippetByInput(input: string): Synvert.Rewriter {
+    return eval(input);
   }
 
-  private runSnippet(group: string, name: string): void {
-    console.log(`===== ${group}/${name} started =====`);
-    Synvert.Rewriter.call(group, name);
-    console.log(`===== ${group}/${name} done =====`);
+  private runSnippet(rewriter: Synvert.Rewriter): void {
+    console.log(`===== ${rewriter.group}/${rewriter.name} started =====`);
+    rewriter.process();
+    console.log(`===== ${rewriter.group}/${rewriter.name} done =====`);
   }
 
-  private testSnippet(group: string, name: string): void {
-    const rewriter = Synvert.Rewriter.fetch(group, name);
+  private testSnippet(rewriter: Synvert.Rewriter): void {
     const result = rewriter.test();
     console.log(JSON.stringify(snakecaseKeys(result)));
   }
@@ -270,7 +258,7 @@ class SynvertCommand extends Command {
     const snippetsHome = this.snippetsHome();
     glob
       .sync(path.join(snippetsHome, "lib/**/*.js"))
-      .forEach((filePath) => runInVm(fs.readFileSync(filePath, "utf-8")));
+      .forEach((filePath) => eval(fs.readFileSync(filePath, "utf-8")));
   }
 
   private snippetsHome() {
@@ -278,10 +266,6 @@ class SynvertCommand extends Command {
       process.env.SYNVERT_SNIPPETS_HOME ||
       path.join(process.env.HOME!, ".synvert-javascript")
     );
-  }
-
-  private camelToUnderscore(key: string): string {
-    return key.replace(/([A-Z])/g, "_$1").toLowerCase();
   }
 }
 

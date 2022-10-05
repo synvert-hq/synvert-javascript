@@ -1,23 +1,5 @@
 import fs from "fs";
 import { URL } from "url";
-import { NodeVM } from "vm2";
-import { Rewriter } from "synvert-core";
-
-export const runInVm = (script: string): void => {
-  const vm = new NodeVM({
-    sandbox: global,
-    // @ts-ignore
-    require: { external: true, resolve: require.resolve },
-    eval: false,
-  });
-  vm.run(script, "./vm.js");
-};
-
-export const getLastSnippetGroupAndName = (): [string, string] => {
-  const group = Object.keys(Rewriter.rewriters)[0];
-  const name = Object.keys(Rewriter.rewriters[group])[0];
-  return [group, name];
-};
 
 export const isValidUrl = (urlString: string): boolean => {
   try {

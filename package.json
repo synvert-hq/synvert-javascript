@@ -46,7 +46,6 @@
     "glob": "^7.2.0",
     "node-fetch": "^2.6.5",
     "snakecase-keys": "^5.4.4",
-    "synvert-core": "^1.9.5",
-    "vm2": "^3.9.10"
+    "synvert-core": "^1.9.5"
   }
 }
