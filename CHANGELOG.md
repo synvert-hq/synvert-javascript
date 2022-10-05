@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.7.0 (2022-10-05)
+
+* Read rewriters before process and test a snippet to support sub snippets
+* Eval snippet to get rewriter
+
 ## 1.6.1 (2022-09-18)
 
 * Snakecase keys in list json results
