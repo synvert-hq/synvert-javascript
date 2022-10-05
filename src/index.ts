@@ -82,14 +82,17 @@ class SynvertCommand extends Command {
         .map((skipPath: string) => skipPath.trim());
     }
     if (flags.run) {
+      this.readSnippets();
       const [group, name] = await this.findSnippetName(flags.run);
       this.runSnippet(group, name);
     }
     if (flags.test) {
+      this.readSnippets();
       const [group, name] = await this.findSnippetName(flags.test);
       this.testSnippet(group, name);
     }
     if (flags.execute) {
+      this.readSnippets();
       process.stdin.on("data", (data) => {
         if (flags.execute === "test") {
           const [group, name] = this.findSnippetNameByInput(data.toString());
