@@ -57,7 +57,6 @@ OPTIONS
   -r, --run=run            run a snippet with snippet name, or local file path, or remote http url
   -s, --show=show          show a snippet with snippet name
   -v, --version
-  --enableEcmaFeaturesJsx  enable EcmaFeatures jsx
   --onlyPaths=onlyPaths    only paths, splitted by comma
   --rootPath=rootPath      [default: .] project root path
   --showRunProcess         show processing files when running a snippet
@@ -119,12 +118,6 @@ Show processing files when running a snippet.
 
 ```
 $ synvert-javascript --run javascript/no-useless-constructor --showRunProgress
-```
-
-Enable EcmaFeatures jsx.
-
-```
-$ synvert-javascript --run javascript/no-useless-constructor --enableEcmaFeaturesJsx
 ```
 
 Skip paths.

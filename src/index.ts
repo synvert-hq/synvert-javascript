@@ -59,9 +59,6 @@ class SynvertCommand extends Command {
     if (flags.showRunProcess) {
       Synvert.Configuration.showRunProcess = true;
     }
-    if (flags.enableEcmaFeaturesJsx) {
-      Synvert.Configuration.enableEcmaFeaturesJsx = true;
-    }
     if (flags.rootPath) {
       Synvert.Configuration.rootPath = flags.rootPath;
     }
@@ -303,10 +300,6 @@ SynvertCommand.flags = {
   showRunProcess: flags.boolean({
     default: false,
     description: "show processing files when running a snippet",
-  }),
-  enableEcmaFeaturesJsx: flags.boolean({
-    default: false,
-    description: "enable EcmaFeatures jsx",
   }),
   onlyPaths: flags.string({
     default: "",
