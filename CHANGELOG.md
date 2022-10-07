@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.7.1 (2022-10-07)
+
+* Remove `enableEcmaFeaturesJsx` option
+
 ## 1.7.0 (2022-10-05)
 
 * Read rewriters before process and test a snippet to support sub snippets
