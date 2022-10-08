@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.7.2 (2022-10-08)
+
+* Remove `--format` option
+
 ## 1.7.1 (2022-10-07)
 
 * Remove `enableEcmaFeaturesJsx` option
