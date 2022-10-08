@@ -50,7 +50,6 @@ USAGE
   $ synvert-javascript
 
 OPTIONS
-  -f, --format=format      output format
   -g, --generate=generate  generate a snippet with snippet name
   -h, --help               show CLI help
   -l, --list               list snippets
@@ -81,9 +80,7 @@ $ synvert-javascript --sync
 List all available snippets.
 
 ```
-$ synvert-javascript -l
-
-$ synvert-javascript --list --format json
+$ synvert-javascript --list
 ```
 
 ### Show a snippet
