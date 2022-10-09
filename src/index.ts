@@ -32,10 +32,15 @@ type Snippet = {
 };
 
 class SynvertCommand extends Command {
+  private format!: string;
+
   async run(): Promise<void> {
     const { flags } = this.parse(SynvertCommand);
     if (flags.version) {
       return this.showVersion();
+    }
+    if (flags.format) {
+      this.format = flags.format;
     }
     if (flags.sync) {
       return await this.syncSnippets();
@@ -127,12 +132,44 @@ class SynvertCommand extends Command {
 
   listSnippets(): void {
     const rewriters = Synvert.Rewriter.rewriters;
-    Object.keys(rewriters).forEach((group) => {
-      console.log(group);
-      Object.keys(rewriters[group]).forEach((name) => {
-        console.log(`    ${name}`);
+    if (this.format === "json") {
+      const output: Snippet[] = [];
+      Object.keys(rewriters).forEach((group) => {
+        Object.keys(rewriters[group]).forEach((name) => {
+          const rewriter = rewriters[group][name];
+          rewriter.options.runInstance = false;
+          rewriter.process();
+          const subSnippets = rewriter.subSnippets.map((subSnippt) => ({
+            group: subSnippt.group,
+            name: subSnippt.name,
+          }));
+          const item: Snippet = {
+            group,
+            name,
+            description: rewriter.description(),
+            subSnippets,
+          };
+          if (rewriter.nodeVersion) {
+            item.nodeVersion = rewriter.nodeVersion.version;
+          }
+          if (rewriter.npmVersion) {
+            item.npmVersion = {
+              name: rewriter.npmVersion.name,
+              version: rewriter.npmVersion.version,
+            };
+          }
+          output.push(item);
+        });
       });
-    });
+      console.log(JSON.stringify(snakecaseKeys(output)));
+    } else {
+      Object.keys(rewriters).forEach((group) => {
+        console.log(group);
+        Object.keys(rewriters[group]).forEach((name) => {
+          console.log(`    ${name}`);
+        });
+      });
+    }
   }
 
   showSnippet(snippetName: string): void {
@@ -259,6 +296,7 @@ SynvertCommand.flags = {
     description:
       "test a snippet with snippet name, or local file path, or remote http url",
   }),
+  format: flags.string({ char: "f", description: "output format" }),
   showRunProcess: flags.boolean({
     default: false,
     description: "show processing files when running a snippet",
