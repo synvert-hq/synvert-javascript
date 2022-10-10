@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.7.3 (2022-10-10)
+
+* Call `processWithSandbox`
+* Revert "remove --format option"
+
 ## 1.7.2 (2022-10-08)
 
 * Remove `--format` option
