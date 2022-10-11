@@ -49,7 +49,6 @@ class SynvertCommand extends Command {
       return this.listSnippets();
     }
     if (flags.show) {
-      this.readSnippets();
       return this.showSnippet(flags.show);
     }
     if (flags.generate) {
@@ -72,17 +71,14 @@ class SynvertCommand extends Command {
         .map((skipPath: string) => skipPath.trim());
     }
     if (flags.run) {
-      this.readSnippets();
       const rewriter = await Synvert.evalSnippet(flags.run);
       this.runSnippet(rewriter);
     }
     if (flags.test) {
-      this.readSnippets();
       const rewriter = await Synvert.evalSnippet(flags.test);
       this.testSnippet(rewriter);
     }
     if (flags.execute) {
-      this.readSnippets();
       process.stdin.on("data", (data) => {
         if (flags.execute === "test") {
           const rewriter = this.evalSnippetByInput(data.toString());
