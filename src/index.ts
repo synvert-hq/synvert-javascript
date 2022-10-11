@@ -9,7 +9,6 @@ import * as Synvert from "synvert-core";
 import ts from "typescript";
 import dedent from "dedent-js";
 import snakecaseKeys from "snakecase-keys";
-import { isValidFile, isValidUrl, formatUrl } from "./utils";
 const stat = promisify(fs.stat);
 const exec = promisify(require("child_process").exec);
 const espree = require("@xinminlabs/espree");
@@ -74,12 +73,12 @@ class SynvertCommand extends Command {
     }
     if (flags.run) {
       this.readSnippets();
-      const rewriter = await this.evalSnippet(flags.run);
+      const rewriter = await Synvert.evalSnippet(flags.run);
       this.runSnippet(rewriter);
     }
     if (flags.test) {
       this.readSnippets();
-      const rewriter = await this.evalSnippet(flags.test);
+      const rewriter = await Synvert.evalSnippet(flags.test);
       this.testSnippet(rewriter);
     }
     if (flags.execute) {
@@ -221,18 +220,6 @@ class SynvertCommand extends Command {
     fs.writeFileSync(path.join("lib", group, name + ".js"), libContent);
     fs.writeFileSync(path.join("test", group, name + ".spec.js"), testContent);
     console.log(`${snippetName} snippet is generated.`);
-  }
-
-  async evalSnippet(snippetName: string): Promise<Synvert.Rewriter> {
-    if (isValidUrl(snippetName)) {
-      const response = await fetch(formatUrl(snippetName));
-      return eval(await response.text());
-    } else if (isValidFile(snippetName)) {
-      return eval(fs.readFileSync(snippetName, "utf-8"));
-    } else {
-      const snippetsHome = this.snippetsHome();
-      return eval(path.join(snippetsHome, "lib", `${snippetName}.js`));
-    }
   }
 
   evalSnippetByInput(input: string): Synvert.Rewriter {
