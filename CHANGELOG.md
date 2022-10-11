@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.7.4 (2022-10-11)
+
+* Use `evalSnippet` from synvert-core
+* No need to read rewriters before run or test a snippet
+
 ## 1.7.3 (2022-10-10)
 
 * Call `processWithSandbox`
