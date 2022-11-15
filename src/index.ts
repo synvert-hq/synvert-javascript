@@ -236,7 +236,7 @@ class SynvertCommand extends Command {
   private readSnippets() {
     const snippetsHome = this.snippetsHome();
     glob
-      .sync(path.join(snippetsHome, "lib/**/*.js"))
+      .sync(path.join(snippetsHome, "lib/!(helpers)/*.js"))
       .forEach((filePath) => eval(fs.readFileSync(filePath, "utf-8")));
   }
 
