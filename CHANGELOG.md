@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.7.5 (2022-11-15)
+
+* Do not read helpers
+
 ## 1.7.4 (2022-10-11)
 
 * Use `evalSnippet` from synvert-core
