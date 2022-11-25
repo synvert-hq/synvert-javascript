@@ -226,8 +226,8 @@ class SynvertCommand extends Command {
     if (this.format === "json") {
       rewriter.process();
       const affectedFiles = rewriter.affectedFiles;
-      rewriter.subSnippets.forEach(subSnippet => {
-        subSnippet.affectedFiles.forEach(filePath => {
+      rewriter.subSnippets.forEach((subSnippet) => {
+        subSnippet.affectedFiles.forEach((filePath) => {
           affectedFiles.add(filePath);
         });
       });
