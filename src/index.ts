@@ -223,9 +223,21 @@ class SynvertCommand extends Command {
   }
 
   private runSnippet(rewriter: Synvert.Rewriter): void {
-    console.log(`===== ${rewriter.group}/${rewriter.name} started =====`);
-    rewriter.process();
-    console.log(`===== ${rewriter.group}/${rewriter.name} done =====`);
+    if (this.format === "json") {
+      rewriter.process();
+      const affectedFiles = rewriter.affectedFiles;
+      rewriter.subSnippets.forEach(subSnippet => {
+        subSnippet.affectedFiles.forEach(filePath => {
+          affectedFiles.add(filePath);
+        });
+      });
+      const output = { affected_files: [...affectedFiles] };
+      console.log(JSON.stringify(output));
+    } else {
+      console.log(`===== ${rewriter.group}/${rewriter.name} started =====`);
+      rewriter.process();
+      console.log(`===== ${rewriter.group}/${rewriter.name} done =====`);
+    }
   }
 
   private testSnippet(rewriter: Synvert.Rewriter): void {
