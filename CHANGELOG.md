@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.8.0 (2022-11-25)
+
+* Output `affectedFiles` for json format run
+
 ## 1.7.5 (2022-11-15)
 
 * Do not read helpers
