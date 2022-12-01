@@ -21,7 +21,8 @@ $ npm install -g synvert
 
 This will also install `synvert-core-javascript`.
 
-Before using synvert, you need to sync all official snippets first.
+Synvert is completely working with remote snippets on github,
+but you can sync all official snippets locally to make it run faster.
 
 ```
 $ synvert-javascript --sync
@@ -31,13 +32,6 @@ Then you can use synvert to rewrite your javascript code, e.g.
 
 ```
 $ synvert-javascript -r jqeury/migrate
-```
-
-Or use it without installing
-
-```
-$ npx -p synvert synvert-javascript --sync
-$ npx -p synvert synvert-javascript --list
 ```
 
 ## Usage
