@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.8.1 (2022-12-01)
+
+* Show message if no snippet when listing snippets
+* Update `synvert-core` to 1.25.2
+
 ## 1.8.0 (2022-11-25)
 
 * Output `affectedFiles` for json format run
