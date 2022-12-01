@@ -157,6 +157,9 @@ class SynvertCommand extends Command {
       });
       console.log(JSON.stringify(snakecaseKeys(output)));
     } else {
+      if (Object.keys(rewriters).length === 0) {
+        console.log(`There is no snippet under ${this.snippetsHome()}, please run \`synvert-javascript --sync\` to fetch snippets.`);
+      }
       Object.keys(rewriters).forEach((group) => {
         console.log(group);
         Object.keys(rewriters[group]).forEach((name) => {
