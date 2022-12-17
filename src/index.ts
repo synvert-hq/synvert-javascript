@@ -130,11 +130,13 @@ class SynvertCommand extends Command {
         Object.keys(rewriters[group]).map((name) => {
           groupNames.push([group, name]);
         });
-      })
-      await Promise.all(groupNames.map(([group, name]) => {
-        const rewriter = rewriters[group][name];
-        return rewriter.processWithSandbox();
-      }));
+      });
+      await Promise.all(
+        groupNames.map(([group, name]) => {
+          const rewriter = rewriters[group][name];
+          return rewriter.processWithSandbox();
+        })
+      );
       const snippets = groupNames.map(([group, name]) => {
         const rewriter = rewriters[group][name];
         const subSnippets = rewriter.subSnippets.map((subSnippt) => ({
@@ -157,11 +159,13 @@ class SynvertCommand extends Command {
           };
         }
         return snippet;
-      })
+      });
       console.log(JSON.stringify(snakecaseKeys(snippets)));
     } else {
       if (Object.keys(rewriters).length === 0) {
-        console.log(`There is no snippet under ${this.snippetsHome()}, please run \`synvert-javascript --sync\` to fetch snippets.`);
+        console.log(
+          `There is no snippet under ${this.snippetsHome()}, please run \`synvert-javascript --sync\` to fetch snippets.`
+        );
       }
       Object.keys(rewriters).forEach((group) => {
         console.log(group);
@@ -220,7 +224,10 @@ class SynvertCommand extends Command {
       });
     `;
     await fs.writeFile(path.join("lib", group, name + ".js"), libContent);
-    await fs.writeFile(path.join("test", group, name + ".spec.js"), testContent);
+    await fs.writeFile(
+      path.join("test", group, name + ".spec.js"),
+      testContent
+    );
     console.log(`${snippetName} snippet is generated.`);
   }
 
@@ -260,10 +267,12 @@ class SynvertCommand extends Command {
   private async readSnippets(): Promise<void> {
     const snippetsHome = this.snippetsHome();
     const paths = await fg(path.join(snippetsHome, "lib/!(helpers)/*.js"));
-    await Promise.all(paths.map(async (path) => {
-      const snippet = await fs.readFile(path, "utf-8");
-      eval(Synvert.rewriteSnippetToAsyncVersion(snippet));
-    }));
+    await Promise.all(
+      paths.map(async (path) => {
+        const snippet = await fs.readFile(path, "utf-8");
+        eval(Synvert.rewriteSnippetToAsyncVersion(snippet));
+      })
+    );
   }
 
   private snippetsHome() {
