@@ -1,5 +1,9 @@
 # CHANGELOG
 
+# 1.10.0 (2022-12-17)
+
+* Add `--maxFileSize` option
+
 ## 1.9.0 (2022-12-17)
 
 * Update `synvert-core` to 2.3.0
