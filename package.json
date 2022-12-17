@@ -43,6 +43,7 @@
     "@xinminlabs/espree": "^9.3.2",
     "compare-versions": "^3.6.0",
     "dedent-js": "^1.0.1",
+    "fast-glob": "^3.2.12",
     "glob": "^7.2.0",
     "node-fetch": "^2.6.5",
     "snakecase-keys": "^5.4.4",
