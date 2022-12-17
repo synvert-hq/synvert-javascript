@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 1.9.0 (2022-12-17)
+
+* Update `synvert-core` to 2.3.0
+* Upate showVersion result
+* Async all commands
+
 ## 1.8.1 (2022-12-01)
 
 * Show message if no snippet when listing snippets
