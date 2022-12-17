@@ -71,6 +71,9 @@ class SynvertCommand extends Command {
         .split(",")
         .map((skipPath: string) => skipPath.trim());
     }
+    if (flags.maxFileSize) {
+      Synvert.Configuration.maxFileSize = flags.maxFileSize;
+    }
     if (flags.run) {
       const rewriter = await Synvert.evalSnippet(flags.run);
       await this.runSnippet(rewriter);
@@ -318,6 +321,10 @@ SynvertCommand.flags = {
     description: "skip paths, splitted by comma",
   }),
   rootPath: flags.string({ default: ".", description: "project root path" }),
+  maxFileSize: flags.integer({
+    default: 10*1024,
+    description: "skip file if its size is more than the size",
+  }),
 };
 
 module.exports = SynvertCommand;
