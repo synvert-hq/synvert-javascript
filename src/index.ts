@@ -236,9 +236,12 @@ class SynvertCommand extends Command {
 
   private async evalSnippetByInput(): Promise<Synvert.Rewriter> {
     const snippet: string = await new Promise((resolve) => {
+      let input = "";
       process.stdin.on("data", (data) => {
-        resolve(data.toString());
-        process.exit();
+        input += data;
+      });
+      process.stdin.on("end", () => {
+        resolve(input.toString());
       });
     });
     return eval(Synvert.rewriteSnippetToAsyncVersion(snippet));
