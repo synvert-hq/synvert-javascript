@@ -1,10 +1,14 @@
 # CHANGELOG
 
-# 1.10.1 (2022-12-18)
+## 1.10.2 (2022-12-30)
+
+* Update `synvert-core` to 2.4.3
+
+## 1.10.1 (2022-12-18)
 
 * Fix snippet input
 
-# 1.10.0 (2022-12-17)
+## 1.10.0 (2022-12-17)
 
 * Add `--maxFileSize` option
 
