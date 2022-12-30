@@ -44,18 +44,21 @@ USAGE
   $ synvert-javascript
 
 OPTIONS
-  -f, --format=format      output format
-  -g, --generate=generate  generate a snippet with snippet name
-  -h, --help               show CLI help
-  -l, --list               list snippets
-  -r, --run=run            run a snippet with snippet name, or local file path, or remote http url
-  -s, --show=show          show a snippet with snippet name
+  -e, --execute=execute      execute a snippet, run or test
+  -f, --format=format        output format
+  -g, --generate=generate    generate a snippet with snippet name
+  -h, --help                 show CLI help
+  -l, --list                 list snippets
+  -r, --run=run              run a snippet with snippet name, or local file path, or remote http url
+  -s, --show=show            show a snippet with snippet name
+  -t, --test=test            test a snippet with snippet name, or local file path, or remote http url
   -v, --version
-  --onlyPaths=onlyPaths    only paths, splitted by comma
-  --rootPath=rootPath      [default: .] project root path
-  --showRunProcess         show processing files when running a snippet
-  --skipPaths=skipPaths    [default: **/node_modules/**] skip paths, splitted by comma
-  --sync                   sync snippets
+  --maxFileSize=maxFileSize  [default: 10240] skip file if its size is more than the size
+  --onlyPaths=onlyPaths      only paths, splitted by comma
+  --rootPath=rootPath        [default: .] project root path
+  --showRunProcess           show processing files when running a snippet
+  --skipPaths=skipPaths      [default: **/node_modules/**] skip paths, splitted by comma
+  --sync                     sync snippets
 ```
 
 ## Commands
@@ -112,6 +115,13 @@ Show processing files when running a snippet.
 
 ```
 $ synvert-javascript --run javascript/no-useless-constructor --showRunProgress
+```
+
+Skip large files.
+
+```
+# skip files if its size is more than 10KB
+$ synvert-javascript --run javascript/no-useless-constructor --maxFileSize 10240
 ```
 
 Skip paths.
