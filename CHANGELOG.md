@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.11.0 (2023-02-05)
+
+* Use kebab case
+
 ## 1.10.3 (2023-01-01)
 
 * Update `synvert-core` to 2.4.4
