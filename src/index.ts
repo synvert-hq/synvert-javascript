@@ -289,7 +289,7 @@ class SynvertCommand extends Command {
   }
 }
 
-SynvertCommand.description = `Write javascript code to change javascript code`;
+SynvertCommand.description = `Write javascript code to rewrite javascript code`;
 
 SynvertCommand.flags = {
   // add --help flag to show CLI version

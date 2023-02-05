@@ -38,27 +38,27 @@ $ synvert-javascript -r jqeury/migrate
 
 ```
 $ synvert-javascript --help
-Write javascript code to change javascript code
+Write javascript code to rewrite javascript code
 
 USAGE
   $ synvert-javascript
 
 OPTIONS
-  -e, --execute=execute      execute a snippet, run or test
-  -f, --format=format        output format
-  -g, --generate=generate    generate a snippet with snippet name
-  -h, --help                 show CLI help
-  -l, --list                 list snippets
-  -r, --run=run              run a snippet with snippet name, or local file path, or remote http url
-  -s, --show=show            show a snippet with snippet name
-  -t, --test=test            test a snippet with snippet name, or local file path, or remote http url
+  -e, --execute=execute          execute a snippet, run or test
+  -f, --format=format            output format
+  -g, --generate=generate        generate a snippet with snippet name
+  -h, --help                     show CLI help
+  -l, --list                     list snippets
+  -r, --run=run                  run a snippet with snippet name, or local file path, or remote http url
+  -s, --show=show                show a snippet with snippet name
+  -t, --test=test                test a snippet with snippet name, or local file path, or remote http url
   -v, --version
-  --maxFileSize=maxFileSize  [default: 10240] skip file if its size is more than the size
-  --onlyPaths=onlyPaths      only paths, splitted by comma
-  --rootPath=rootPath        [default: .] project root path
-  --showRunProcess           show processing files when running a snippet
-  --skipPaths=skipPaths      [default: **/node_modules/**] skip paths, splitted by comma
-  --sync                     sync snippets
+  --max-file-size=max-file-size  [default: 10240] skip file if its size is more than the size
+  --only-paths=only-paths        only paths, splitted by comma
+  --root-path=root-path          [default: .] project root path
+  --show-run-process             show processing files when running a snippet
+  --skip-paths=skip-paths        [default: **/node_modules/**] skip paths, splitted by comma
+  --sync                         sync snippets
 ```
 
 ## Commands
@@ -114,32 +114,32 @@ $ synvert-javascript --run ~/Sites/xinminlabs/synvert-snippets-javascript/lib/jq
 Show processing files when running a snippet.
 
 ```
-$ synvert-javascript --run javascript/no-useless-constructor --showRunProgress
+$ synvert-javascript --run javascript/no-useless-constructor --show-run-progress
 ```
 
 Skip large files.
 
 ```
 # skip files if its size is more than 10KB
-$ synvert-javascript --run javascript/no-useless-constructor --maxFileSize 10240
+$ synvert-javascript --run javascript/no-useless-constructor --max-file-size 10240
 ```
 
 Skip paths.
 
 ```
-$ synvert-javascript --run javascript/no-useless-constructor --skipPaths **/node_modules/**,**/dist/**
+$ synvert-javascript --run javascript/no-useless-constructor --skip-paths **/node_modules/**,**/dist/**
 ```
 
 Only paths.
 
 ```
-$ synvert-javascript --run javascript/no-useless-constructor --onlyPaths frontend/src/javascripts
+$ synvert-javascript --run javascript/no-useless-constructor --only-paths frontend/src/javascripts
 ```
 
 Root path.
 
 ```
-$ synvert-javascript --run javascript/no-useless-constructor --rootPath /repos/synvert
+$ synvert-javascript --run javascript/no-useless-constructor --root-path /repos/synvert
 ```
 
 ### Generate a snippet
