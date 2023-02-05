@@ -55,24 +55,24 @@ class SynvertCommand extends Command {
     if (flags.generate) {
       return await this.generateSnippet(flags.generate);
     }
-    if (flags['show-run-process']) {
+    if (flags["show-run-process"]) {
       Synvert.Configuration.showRunProcess = true;
     }
-    if (flags['root-path']) {
-      Synvert.Configuration.rootPath = flags['root-path'];
+    if (flags["root-path"]) {
+      Synvert.Configuration.rootPath = flags["root-path"];
     }
-    if (flags['only-paths']) {
-      Synvert.Configuration.onlyPaths = flags['only-paths']
+    if (flags["only-paths"]) {
+      Synvert.Configuration.onlyPaths = flags["only-paths"]
         .split(",")
         .map((onlyPath: string) => onlyPath.trim());
     }
-    if (flags['skip-paths']) {
-      Synvert.Configuration.skipPaths = flags['skip-paths']
+    if (flags["skip-paths"]) {
+      Synvert.Configuration.skipPaths = flags["skip-paths"]
         .split(",")
         .map((skipPath: string) => skipPath.trim());
     }
-    if (flags['max-file-size']) {
-      Synvert.Configuration.maxFileSize = flags['max-file-size'];
+    if (flags["max-file-size"]) {
+      Synvert.Configuration.maxFileSize = flags["max-file-size"];
     }
     if (flags.run) {
       const rewriter = await Synvert.evalSnippet(flags.run);
@@ -320,20 +320,20 @@ SynvertCommand.flags = {
       "test a snippet with snippet name, or local file path, or remote http url",
   }),
   format: flags.string({ char: "f", description: "output format" }),
-  'show-run-process': flags.boolean({
+  "show-run-process": flags.boolean({
     default: false,
     description: "show processing files when running a snippet",
   }),
-  'only-paths': flags.string({
+  "only-paths": flags.string({
     default: "",
     description: "only paths, splitted by comma",
   }),
-  'skip-paths': flags.string({
+  "skip-paths": flags.string({
     default: "**/node_modules/**",
     description: "skip paths, splitted by comma",
   }),
-  'root-path': flags.string({ default: ".", description: "project root path" }),
-  'max-file-size': flags.integer({
+  "root-path": flags.string({ default: ".", description: "project root path" }),
+  "max-file-size": flags.integer({
     default: 10 * 1024,
     description: "skip file if its size is more than the size",
   }),
