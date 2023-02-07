@@ -57,6 +57,7 @@ OPTIONS
   --only-paths=only-paths        only paths, splitted by comma
   --root-path=root-path          [default: .] project root path
   --show-run-process             show processing files when running a snippet
+  --single-quote                 prefer single quote, it uses double quote by default
   --skip-paths=skip-paths        [default: **/node_modules/**] skip paths, splitted by comma
   --sync                         sync snippets
 ```
