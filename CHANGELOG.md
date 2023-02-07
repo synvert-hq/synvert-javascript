@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.12.0 (2023-02-07)
+
+* Add `--single-quote` flag
+* Update `synvert-core` to 2.7.0
+
 ## 1.11.0 (2023-02-05)
 
 * Use kebab case
