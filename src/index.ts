@@ -74,6 +74,7 @@ class SynvertCommand extends Command {
     if (flags["max-file-size"]) {
       Synvert.Configuration.maxFileSize = flags["max-file-size"];
     }
+    Synvert.Configuration.singleQuote = flags["single-quote"];
     if (flags.run) {
       const rewriter = await Synvert.evalSnippet(flags.run);
       await this.runSnippet(rewriter);
@@ -337,6 +338,7 @@ SynvertCommand.flags = {
     default: 10 * 1024,
     description: "skip file if its size is more than the size",
   }),
+  "single-quote": flags.boolean({ default: false, description: "prefer single quote, it uses double quote by default" }),
 };
 
 module.exports = SynvertCommand;
