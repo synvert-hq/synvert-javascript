@@ -338,7 +338,10 @@ SynvertCommand.flags = {
     default: 10 * 1024,
     description: "skip file if its size is more than the size",
   }),
-  "single-quote": flags.boolean({ default: false, description: "prefer single quote, it uses double quote by default" }),
+  "single-quote": flags.boolean({
+    default: false,
+    description: "prefer single quote, it uses double quote by default",
+  }),
 };
 
 module.exports = SynvertCommand;
