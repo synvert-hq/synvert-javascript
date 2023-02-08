@@ -71,11 +71,10 @@ class SynvertCommand extends Command {
         .split(",")
         .map((skipPath: string) => skipPath.trim());
     }
-    if (flags["max-file-size"]) {
-      Synvert.Configuration.maxFileSize = flags["max-file-size"];
-    }
+    Synvert.Configuration.maxFileSize = flags["max-file-size"];
     Synvert.Configuration.singleQuote = flags["single-quote"];
     Synvert.Configuration.semi = !flags["no-semi"];
+    Synvert.Configuration.tabWidth = flags["tab-width"];
     if (flags.run) {
       const rewriter = await Synvert.evalSnippet(flags.run);
       await this.runSnippet(rewriter);
@@ -346,6 +345,10 @@ SynvertCommand.flags = {
   "no-semi": flags.boolean({
     default: false,
     description: "prefer no semicolon, it prints semicolon by default",
+  }),
+  "tab-width": flags.integer({
+    default: 2,
+    description: "prefer tab width, it uses 2 by default",
   }),
 };
 
