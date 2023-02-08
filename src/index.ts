@@ -75,6 +75,7 @@ class SynvertCommand extends Command {
       Synvert.Configuration.maxFileSize = flags["max-file-size"];
     }
     Synvert.Configuration.singleQuote = flags["single-quote"];
+    Synvert.Configuration.semi = !flags["no-semi"];
     if (flags.run) {
       const rewriter = await Synvert.evalSnippet(flags.run);
       await this.runSnippet(rewriter);
@@ -341,6 +342,10 @@ SynvertCommand.flags = {
   "single-quote": flags.boolean({
     default: false,
     description: "prefer single quote, it uses double quote by default",
+  }),
+  "no-semi": flags.boolean({
+    default: false,
+    description: "prefer no semicolon, it prints semicolon by default",
   }),
 };
 
