@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.13.0 (2023-02-08)
+
+* Add `--no-semi` flag
+* Update `synvert-core` to 2.9.0
+
 ## 1.12.0 (2023-02-07)
 
 * Add `--single-quote` flag
