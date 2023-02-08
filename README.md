@@ -61,6 +61,7 @@ OPTIONS
   --single-quote                 prefer single quote, it uses double quote by default
   --skip-paths=skip-paths        [default: **/node_modules/**] skip paths, splitted by comma
   --sync                         sync snippets
+  --tab-width=tab-width          [default: 2] prefer tab width
 ```
 
 ## Commands

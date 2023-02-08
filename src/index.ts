@@ -348,7 +348,7 @@ SynvertCommand.flags = {
   }),
   "tab-width": flags.integer({
     default: 2,
-    description: "prefer tab width, it uses 2 by default",
+    description: "prefer tab width",
   }),
 };
 
