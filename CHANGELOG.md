@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.14.1 (2023-02-18)
+
+* Update `synvert-core` to 2.12.0
+
 ## 1.14.0 (2023-02-08)
 
 * Add `--tab-width` flag
