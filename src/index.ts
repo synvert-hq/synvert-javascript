@@ -194,31 +194,31 @@ class SynvertCommand extends Command {
     await fs.mkdir(path.join("lib", group), { recursive: true });
     await fs.mkdir(path.join("test", group), { recursive: true });
     const libContent = dedent`
-      const Synvert = require("synvert-core");
-
       new Synvert.Rewriter("${group}", "${name}", () => {
-        description("convert foo to bar");
+        description(\`
+          convert foo to bar
+        \`);
+
+        configure({ parser: Synvert.Parser.TYPESCRIPT });
 
         withinFiles(Synvert.ALL_FILES, function () {
-          withNode({ type: "ExpressionStatement", expression: { type: "Identifier", name: "foo" } }, () => {
-            replaceWith("bar")
+          findNode(\`.Identifier[escapedText=foo]\`, () => {
+            replaceWith("bar");
           });
         });
       });
     `;
     const testContent = dedent`
-      const snippet = "${group}/${name}"
-      require(\`../../lib/\${snippet}\`);
+      const snippet = "${group}/${name}";
       const { assertConvert } = require("../utils");
 
       describe(snippet, () => {
         const input = \`
           foo
-        \`
-
+        \`;
         const output = \`
           bar
-        \`
+        \`;
 
         assertConvert({
           input,
