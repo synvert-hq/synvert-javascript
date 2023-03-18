@@ -235,7 +235,7 @@ class SynvertCommand extends Command {
     console.log(`${snippetName} snippet is generated.`);
   }
 
-  private async evalSnippetByInput(): Promise<Synvert.Rewriter> {
+  private async evalSnippetByInput(): Promise<Synvert.Rewriter<any>> {
     const snippet: string = await new Promise((resolve) => {
       let input = "";
       process.stdin.on("data", (data) => {
@@ -248,7 +248,7 @@ class SynvertCommand extends Command {
     return eval(Synvert.rewriteSnippetToAsyncVersion(snippet));
   }
 
-  private async runSnippet(rewriter: Synvert.Rewriter): Promise<void> {
+  private async runSnippet(rewriter: Synvert.Rewriter<any>): Promise<void> {
     if (this.format === "json") {
       await rewriter.process();
       const affectedFiles = rewriter.affectedFiles;
@@ -266,7 +266,7 @@ class SynvertCommand extends Command {
     }
   }
 
-  private async testSnippet(rewriter: Synvert.Rewriter): Promise<void> {
+  private async testSnippet(rewriter: Synvert.Rewriter<any>): Promise<void> {
     const result = await rewriter.test();
     console.log(JSON.stringify(snakecaseKeys(result)));
   }
