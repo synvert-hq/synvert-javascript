@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.14.5 (2023-06-07)
+
+* Update `synvert-core` to 2.16.2
+
 ## 1.14.4 (2023-03-18)
 
 * Update `synvert-core` to 2.12.2
