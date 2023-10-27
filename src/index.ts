@@ -1,40 +1,16 @@
 import { Command, flags } from "@oclif/command";
-import { promisify } from "util";
-import fetch from "node-fetch";
-import path from "path";
-import fg from "fast-glob";
-import compareVersions from "compare-versions";
-import { promises as fs } from "fs";
 import * as Synvert from "synvert-core";
 import ts from "typescript";
-import dedent from "dedent-js";
-import snakecaseKeys from "snakecase-keys";
-const exec = promisify(require("child_process").exec);
+
+import Action from "./action";
+
 const espree = require("@xinminlabs/espree");
-
-type groupNameType = [string, string];
-
-type SimpleSnippet = {
-  group: string;
-  name: string;
-};
-
-type Snippet = {
-  group: string;
-  name: string;
-  description: string;
-  subSnippets: SimpleSnippet[];
-  nodeVersion?: string;
-  npmVersion?: {
-    name: string;
-    version: string;
-  };
-};
 
 class SynvertCommand extends Command {
   private format!: string;
 
   async run(): Promise<void> {
+    const action = new Action(this.log);
     const { flags } = this.parse(SynvertCommand);
     if (flags.version) {
       return this.showVersion();
@@ -43,17 +19,17 @@ class SynvertCommand extends Command {
       this.format = flags.format;
     }
     if (flags.sync) {
-      return await this.syncSnippets();
+      return await action.syncSnippets();
     }
     if (flags.list) {
-      await this.readSnippets();
-      return await this.listSnippets();
+      await action.readSnippets();
+      return await action.listSnippets(this.format);
     }
     if (flags.show) {
-      return await this.showSnippet(flags.show);
+      return await action.showSnippet(flags.show);
     }
     if (flags.generate) {
-      return await this.generateSnippet(flags.generate);
+      return await action.generateSnippet(flags.generate);
     }
     if (flags["show-run-process"]) {
       Synvert.Configuration.showRunProcess = true;
@@ -77,18 +53,18 @@ class SynvertCommand extends Command {
     Synvert.Configuration.tabWidth = flags["tab-width"];
     if (flags.run) {
       const rewriter = await Synvert.evalSnippet(flags.run);
-      await this.runSnippet(rewriter);
+      await action.runSnippet(rewriter, this.format);
     }
     if (flags.test) {
       const rewriter = await Synvert.evalSnippet(flags.test);
-      await this.testSnippet(rewriter);
+      await action.testSnippet(rewriter);
     }
     if (flags.execute) {
       const rewriter = await this.evalSnippetByInput();
       if (flags.execute === "test") {
-        await this.testSnippet(rewriter);
+        await action.testSnippet(rewriter);
       } else {
-        await this.runSnippet(rewriter);
+        await action.runSnippet(rewriter, this.format);
       }
       return;
     }
@@ -99,140 +75,6 @@ class SynvertCommand extends Command {
     console.log(
       `${pjson.version} (with synvert-core ${Synvert.version} and espree ${espree.version} and typescript ${ts.version})`
     );
-  }
-
-  async syncSnippets(): Promise<void> {
-    const snippetsHome = this.snippetsHome();
-    try {
-      await fs.stat(snippetsHome);
-      process.chdir(snippetsHome);
-      await exec("git checkout .; git pull --rebase");
-    } catch {
-      await exec(
-        `git clone https://github.com/xinminlabs/synvert-snippets-javascript.git ${snippetsHome}`
-      );
-    }
-    this.log("snippets are synced");
-
-    const response = await fetch(
-      "https://registry.npmjs.org/synvert-core/latest"
-    );
-    const json = await response.json();
-    if (compareVersions.compare(json.version, Synvert.version, ">")) {
-      const { stdout } = await exec("npm root -g");
-      await exec(
-        `cd ${stdout.trim()}/synvert; npm install synvert-core@${json.version}`
-      );
-    }
-  }
-
-  async listSnippets(): Promise<void> {
-    const rewriters = Synvert.Rewriter.rewriters;
-    if (this.format === "json") {
-      const groupNames: groupNameType[] = [];
-      Object.keys(rewriters).map((group) => {
-        Object.keys(rewriters[group]).map((name) => {
-          groupNames.push([group, name]);
-        });
-      });
-      await Promise.all(
-        groupNames.map(([group, name]) => {
-          const rewriter = rewriters[group][name];
-          return rewriter.processWithSandbox();
-        })
-      );
-      const snippets = groupNames.map(([group, name]) => {
-        const rewriter = rewriters[group][name];
-        const subSnippets = rewriter.subSnippets.map((subSnippt) => ({
-          group: subSnippt.group,
-          name: subSnippt.name,
-        }));
-        const snippet: Snippet = {
-          group,
-          name,
-          description: rewriter.description(),
-          subSnippets,
-        };
-        if (rewriter.nodeVersion) {
-          snippet.nodeVersion = rewriter.nodeVersion.version;
-        }
-        if (rewriter.npmVersion) {
-          snippet.npmVersion = {
-            name: rewriter.npmVersion.name,
-            version: rewriter.npmVersion.version,
-          };
-        }
-        return snippet;
-      });
-      console.log(JSON.stringify(snakecaseKeys(snippets)));
-    } else {
-      if (Object.keys(rewriters).length === 0) {
-        console.log(
-          `There is no snippet under ${this.snippetsHome()}, please run \`synvert-javascript --sync\` to fetch snippets.`
-        );
-      }
-      Object.keys(rewriters).forEach((group) => {
-        console.log(group);
-        Object.keys(rewriters[group]).forEach((name) => {
-          console.log(`    ${name}`);
-        });
-      });
-    }
-  }
-
-  async showSnippet(snippetName: string): Promise<void> {
-    const filePath = path.join(this.snippetsHome(), "lib", `${snippetName}.js`);
-    try {
-      console.log(await fs.readFile(filePath, "utf-8"));
-    } catch {
-      console.log(`snippet ${snippetName} not found`);
-    }
-  }
-
-  async generateSnippet(snippetName: string): Promise<void> {
-    const [group, name] = snippetName.split("/");
-    await fs.mkdir(path.join("lib", group), { recursive: true });
-    await fs.mkdir(path.join("test", group), { recursive: true });
-    const libContent = dedent`
-      new Synvert.Rewriter("${group}", "${name}", () => {
-        description(\`
-          convert foo to bar
-        \`);
-
-        configure({ parser: Synvert.Parser.TYPESCRIPT });
-
-        withinFiles(Synvert.ALL_FILES, function () {
-          findNode(\`.Identifier[escapedText=foo]\`, () => {
-            replaceWith("bar");
-          });
-        });
-      });
-    `;
-    const testContent = dedent`
-      const snippet = "${group}/${name}";
-      const { assertConvert } = require("../utils");
-
-      describe(snippet, () => {
-        const input = \`
-          foo
-        \`;
-        const output = \`
-          bar
-        \`;
-
-        assertConvert({
-          input,
-          output,
-          snippet,
-        });
-      });
-    `;
-    await fs.writeFile(path.join("lib", group, name + ".js"), libContent);
-    await fs.writeFile(
-      path.join("test", group, name + ".spec.js"),
-      testContent
-    );
-    console.log(`${snippetName} snippet is generated.`);
   }
 
   private async evalSnippetByInput(): Promise<Synvert.Rewriter<any>> {
@@ -246,47 +88,6 @@ class SynvertCommand extends Command {
       });
     });
     return eval(Synvert.rewriteSnippetToAsyncVersion(snippet));
-  }
-
-  private async runSnippet(rewriter: Synvert.Rewriter<any>): Promise<void> {
-    if (this.format === "json") {
-      await rewriter.process();
-      const affectedFiles = rewriter.affectedFiles;
-      rewriter.subSnippets.forEach((subSnippet) => {
-        subSnippet.affectedFiles.forEach((filePath) => {
-          affectedFiles.add(filePath);
-        });
-      });
-      const output = { affected_files: [...affectedFiles] };
-      console.log(JSON.stringify(output));
-    } else {
-      console.log(`===== ${rewriter.group}/${rewriter.name} started =====`);
-      await rewriter.process();
-      console.log(`===== ${rewriter.group}/${rewriter.name} done =====`);
-    }
-  }
-
-  private async testSnippet(rewriter: Synvert.Rewriter<any>): Promise<void> {
-    const result = await rewriter.test();
-    console.log(JSON.stringify(snakecaseKeys(result)));
-  }
-
-  private async readSnippets(): Promise<void> {
-    const snippetsHome = this.snippetsHome();
-    const paths = await fg(path.join(snippetsHome, "lib/!(helpers)/*.js"));
-    await Promise.all(
-      paths.map(async (path) => {
-        const snippet = await fs.readFile(path, "utf-8");
-        eval(Synvert.rewriteSnippetToAsyncVersion(snippet));
-      })
-    );
-  }
-
-  private snippetsHome() {
-    return (
-      process.env.SYNVERT_SNIPPETS_HOME ||
-      path.join(process.env.HOME!, ".synvert-javascript")
-    );
   }
 }
 
@@ -352,4 +153,4 @@ SynvertCommand.flags = {
   }),
 };
 
-module.exports = SynvertCommand;
+export default SynvertCommand;
