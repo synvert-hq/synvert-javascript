@@ -2,7 +2,7 @@ import { Command, flags } from "@oclif/command";
 import * as Synvert from "synvert-core";
 import ts from "typescript";
 
-import Action from "./action";
+import { syncSnippets, readSnippets, listSnippets, showSnippet, generateSnippet, runSnippet, testSnippet } from "./command";
 
 const espree = require("@xinminlabs/espree");
 
@@ -10,7 +10,6 @@ class SynvertCommand extends Command {
   private format!: string;
 
   async run(): Promise<void> {
-    const action = new Action(this.log);
     const { flags } = this.parse(SynvertCommand);
     if (flags.version) {
       return this.showVersion();
@@ -19,17 +18,17 @@ class SynvertCommand extends Command {
       this.format = flags.format;
     }
     if (flags.sync) {
-      return await action.syncSnippets();
+      return await syncSnippets();
     }
     if (flags.list) {
-      await action.readSnippets();
-      return await action.listSnippets(this.format);
+      await readSnippets();
+      return await listSnippets(this.format);
     }
     if (flags.show) {
-      return await action.showSnippet(flags.show);
+      return await showSnippet(flags.show);
     }
     if (flags.generate) {
-      return await action.generateSnippet(flags.generate);
+      return await generateSnippet(flags.generate);
     }
     if (flags["show-run-process"]) {
       Synvert.Configuration.showRunProcess = true;
@@ -53,18 +52,18 @@ class SynvertCommand extends Command {
     Synvert.Configuration.tabWidth = flags["tab-width"];
     if (flags.run) {
       const rewriter = await Synvert.evalSnippet(flags.run);
-      await action.runSnippet(rewriter, this.format);
+      await runSnippet(rewriter, this.format);
     }
     if (flags.test) {
       const rewriter = await Synvert.evalSnippet(flags.test);
-      await action.testSnippet(rewriter);
+      await testSnippet(rewriter);
     }
     if (flags.execute) {
       const rewriter = await this.evalSnippetByInput();
       if (flags.execute === "test") {
-        await action.testSnippet(rewriter);
+        await testSnippet(rewriter);
       } else {
-        await action.runSnippet(rewriter, this.format);
+        await runSnippet(rewriter, this.format);
       }
       return;
     }
@@ -153,4 +152,4 @@ SynvertCommand.flags = {
   }),
 };
 
-export default SynvertCommand;
+module.exports = SynvertCommand;
