@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.14.8 (2023-10-29)
+
+* Update `synvert-core` to 2.17.6
+* Abstract command from cli
+
 ## 1.14.7 (2023-09-30)
 
 * Update `synvert-core` to 2.17.0
