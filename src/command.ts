@@ -81,9 +81,9 @@ export async function availableSnippets(): Promise<Snippet[]> {
   );
   return groupNames.map(([group, name]) => {
     const rewriter = rewriters[group][name];
-    const subSnippets = rewriter.subSnippets.map((subSnippt) => ({
-      group: subSnippt.group,
-      name: subSnippt.name,
+    const subSnippets = rewriter.subSnippets.map((subSnippet) => ({
+      group: subSnippet.group,
+      name: subSnippet.name,
     }));
     const snippet: Snippet = {
       group,
