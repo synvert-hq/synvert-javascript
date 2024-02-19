@@ -19,19 +19,19 @@ export async function syncSnippets(): Promise<void> {
     await exec("git checkout .; git pull --rebase");
   } catch {
     await exec(
-      `git clone https://github.com/xinminlabs/synvert-snippets-javascript.git ${snippetsHome()}`
+      `git clone https://github.com/xinminlabs/synvert-snippets-javascript.git ${snippetsHome()}`,
     );
   }
   console.log("snippets are synced");
 
   const response = await fetch(
-    "https://registry.npmjs.org/synvert-core/latest"
+    "https://registry.npmjs.org/synvert-core/latest",
   );
   const json = await response.json();
   if (compareVersions.compare(json.version, Synvert.version, ">")) {
     const { stdout } = await exec("npm root -g");
     await exec(
-      `cd ${stdout.trim()}/synvert; npm install synvert-core@${json.version}`
+      `cd ${stdout.trim()}/synvert; npm install synvert-core@${json.version}`,
     );
   }
 }
@@ -42,7 +42,7 @@ export async function readSnippets(): Promise<void> {
     paths.map(async (path) => {
       const snippet = await fs.readFile(path, "utf-8");
       eval(Synvert.rewriteSnippetToAsyncVersion(snippet));
-    })
+    }),
   );
 }
 
@@ -53,7 +53,7 @@ export async function listSnippets(format: string): Promise<void> {
   } else {
     if (Object.keys(rewriters).length === 0) {
       console.log(
-        `There is no snippet under ${snippetsHome()}, please run \`synvert-javascript --sync\` to fetch snippets.`
+        `There is no snippet under ${snippetsHome()}, please run \`synvert-javascript --sync\` to fetch snippets.`,
       );
     }
     Object.keys(rewriters).forEach((group) => {
@@ -77,7 +77,7 @@ export async function availableSnippets(): Promise<Snippet[]> {
     groupNames.map(([group, name]) => {
       const rewriter = rewriters[group][name];
       return rewriter.processWithSandbox();
-    })
+    }),
   );
   return groupNames.map(([group, name]) => {
     const rewriter = rewriters[group][name];
@@ -152,14 +152,14 @@ export async function generateSnippet(snippetName: string): Promise<void> {
     });
   `;
   await fs.writeFile(path.join("lib", group, name + ".js"), libContent);
-  await fs.writeFile(
-    path.join("test", group, name + ".spec.js"),
-    testContent
-  );
+  await fs.writeFile(path.join("test", group, name + ".spec.js"), testContent);
   console.log(`${snippetName} snippet is generated.`);
 }
 
-export async function runSnippet(rewriter: Synvert.Rewriter<any>, format: string): Promise<void> {
+export async function runSnippet(
+  rewriter: Synvert.Rewriter<any>,
+  format: string,
+): Promise<void> {
   if (format === "json") {
     await rewriter.process();
     const affectedFiles = rewriter.affectedFiles;
@@ -177,7 +177,9 @@ export async function runSnippet(rewriter: Synvert.Rewriter<any>, format: string
   }
 }
 
-export async function testSnippet(rewriter: Synvert.Rewriter<any>): Promise<void> {
+export async function testSnippet(
+  rewriter: Synvert.Rewriter<any>,
+): Promise<void> {
   const result = await rewriter.test();
   console.log(JSON.stringify(snakecaseKeys(result)));
 }
