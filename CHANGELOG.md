@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.15.0 (2024-02-19)
+
+* Update `synvert-core` to 2.19.0
+* Add `--dont-respect-gitignore` flag
+
 ## 1.14.8 (2023-10-29)
 
 * Update `synvert-core` to 2.17.6
@@ -71,7 +76,7 @@
 ## 1.9.0 (2022-12-17)
 
 * Update `synvert-core` to 2.3.0
-* Upate showVersion result
+* Update showVersion result
 * Async all commands
 
 ## 1.8.1 (2022-12-01)
