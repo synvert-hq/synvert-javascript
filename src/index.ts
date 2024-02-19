@@ -46,6 +46,7 @@ class SynvertCommand extends Command {
         .split(",")
         .map((skipPath: string) => skipPath.trim());
     }
+    Synvert.Configuration.respectGitignore = !flags["dont-respect-gitignore"];
     Synvert.Configuration.maxFileSize = flags["max-file-size"];
     Synvert.Configuration.singleQuote = flags["single-quote"];
     Synvert.Configuration.semi = !flags["no-semi"];
@@ -134,6 +135,10 @@ SynvertCommand.flags = {
     description: "skip paths, splitted by comma",
   }),
   "root-path": flags.string({ default: ".", description: "project root path" }),
+  "dont-respect-gitignore": flags.boolean({
+    default: false,
+    description: "do not respect .gitignore",
+  }),
   "max-file-size": flags.integer({
     default: 10 * 1024,
     description: "skip file if its size is more than the size",
