@@ -2,7 +2,15 @@ import { Command, flags } from "@oclif/command";
 import * as Synvert from "synvert-core";
 import ts from "typescript";
 
-import { syncSnippets, readSnippets, listSnippets, showSnippet, generateSnippet, runSnippet, testSnippet } from "./command";
+import {
+  syncSnippets,
+  readSnippets,
+  listSnippets,
+  showSnippet,
+  generateSnippet,
+  runSnippet,
+  testSnippet,
+} from "./command";
 
 const espree = require("@xinminlabs/espree");
 
@@ -73,7 +81,7 @@ class SynvertCommand extends Command {
   showVersion(): void {
     const pjson = require("../package.json");
     console.log(
-      `${pjson.version} (with synvert-core ${Synvert.version} and espree ${espree.version} and typescript ${ts.version})`
+      `${pjson.version} (with synvert-core ${Synvert.version} and espree ${espree.version} and typescript ${ts.version})`,
     );
   }
 
