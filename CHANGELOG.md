@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.15.3 (2024-04-08)
+
+* Update `synvert-core` to 2.19.3
+
 ## 1.15.2 (2024-04-08)
 
 * Use package `@synvert-hq/synvert-core`

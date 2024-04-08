@@ -1,7 +1,7 @@
 {
   "name": "@synvert-hq/synvert",
   "description": "write javascript code to rewrite javascript code",
-  "version": "1.15.2",
+  "version": "1.15.3",
   "author": "Richard Huang",
   "bin": {
     "synvert-javascript": "./bin/run"
