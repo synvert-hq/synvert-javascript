@@ -40,12 +40,12 @@
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
     "@oclif/plugin-help": "^3.2.3",
+    "@synvert-hq/synvert-core": "^2.19.2",
     "compare-versions": "^3.6.0",
     "dedent-js": "^1.0.1",
     "fast-glob": "^3.2.12",
     "glob": "^7.2.0",
     "node-fetch": "^2.6.5",
-    "snakecase-keys": "^5.4.4",
-    "synvert-core": "^2.19.1"
+    "snakecase-keys": "^5.4.4"
   }
 }
