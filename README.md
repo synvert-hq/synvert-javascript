@@ -16,7 +16,7 @@
 Install through npm
 
 ```
-$ npm install -g synvert
+$ npm install -g @synvert-hq/synvert
 ```
 
 This will also install `synvert-core-javascript`.

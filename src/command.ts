@@ -25,13 +25,13 @@ export async function syncSnippets(): Promise<void> {
   console.log("snippets are synced");
 
   const response = await fetch(
-    "https://registry.npmjs.org/synvert-core/latest",
+    "https://registry.npmjs.org/@synvert-hq/synvert-core/latest",
   );
   const json = await response.json();
   if (compareVersions.compare(json.version, Synvert.version, ">")) {
     const { stdout } = await exec("npm root -g");
     await exec(
-      `cd ${stdout.trim()}/synvert; npm install synvert-core@${json.version}`,
+      `cd ${stdout.trim()}/synvert; npm install @synvert-hq/synvert-core@${json.version}`,
     );
   }
 }

@@ -78,7 +78,7 @@ class SynvertCommand extends Command {
   showVersion(): void {
     const pjson = require("../package.json");
     console.log(
-      `${pjson.version} (with synvert-core ${Synvert.version})`,
+      `${pjson.version} (with @synvert-hq/synvert-core ${Synvert.version})`,
     );
   }
 
