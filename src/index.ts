@@ -12,8 +12,6 @@ import {
   testSnippet,
 } from "./command";
 
-const espree = require("@synvert-hq/espree");
-
 class SynvertCommand extends Command {
   private format!: string;
 
@@ -81,7 +79,7 @@ class SynvertCommand extends Command {
   showVersion(): void {
     const pjson = require("../package.json");
     console.log(
-      `${pjson.version} (with synvert-core ${Synvert.version} and espree ${espree.version} and typescript ${ts.version})`,
+      `${pjson.version} (with synvert-core ${Synvert.version})`,
     );
   }
 
