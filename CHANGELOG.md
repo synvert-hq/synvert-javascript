@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.15.2 (2024-04-08)
+
+* Use package `@synvert-hq/synvert-core`
+* Rename package to `@synvert-hq/synvert`
+
 ## 1.15.1 (2024-04-08)
 
 * Moving from `@xinminlabs` to `@synvert-hq`
