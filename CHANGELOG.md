@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.15.1 (2024-04-08)
+
+* Moving from `@xinminlabs` to `@synvert-hq`
+* Do not show espree version
+
 ## 1.15.0 (2024-02-19)
 
 * Update `synvert-core` to 2.19.0
