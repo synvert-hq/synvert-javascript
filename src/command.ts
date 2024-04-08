@@ -19,7 +19,7 @@ export async function syncSnippets(): Promise<void> {
     await exec("git checkout .; git pull --rebase");
   } catch {
     await exec(
-      `git clone https://github.com/xinminlabs/synvert-snippets-javascript.git ${snippetsHome()}`,
+      `git clone https://github.com/synvert-hq/synvert-snippets-javascript.git ${snippetsHome()}`,
     );
   }
   console.log("snippets are synced");

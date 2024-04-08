@@ -6,7 +6,7 @@
   "bin": {
     "synvert-javascript": "./bin/run"
   },
-  "bugs": "https://github.com/xinminlabs/synvert-javascript/issues",
+  "bugs": "https://github.com/synvert-hq/synvert-javascript/issues",
   "devDependencies": {
     "@oclif/dev-cli": "^1.26.0",
     "@types/node-fetch": "^2.6.1",
@@ -19,7 +19,7 @@
     "/bin",
     "/lib"
   ],
-  "homepage": "https://github.com/xinminlabs/synvert-javascript",
+  "homepage": "https://github.com/synvert-hq/synvert-javascript",
   "keywords": [
     "ast",
     "rewrite"
@@ -29,7 +29,7 @@
   "oclif": {
     "bin": "synvert-javascript"
   },
-  "repository": "xinminlabs/synvert-javascript",
+  "repository": "synvert-hq/synvert-javascript",
   "scripts": {
     "build": "tsc --project tsconfig.build.json",
     "prepack": "npm run build",
@@ -40,13 +40,13 @@
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
     "@oclif/plugin-help": "^3.2.3",
-    "@xinminlabs/espree": "^9.3.2",
+    "@synvert-hq/espree": "^10.0.1",
     "compare-versions": "^3.6.0",
     "dedent-js": "^1.0.1",
     "fast-glob": "^3.2.12",
     "glob": "^7.2.0",
     "node-fetch": "^2.6.5",
     "snakecase-keys": "^5.4.4",
-    "synvert-core": "^2.19.0"
+    "synvert-core": "^2.19.1"
   }
 }

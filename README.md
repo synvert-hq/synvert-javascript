@@ -3,13 +3,13 @@
 <img src="https://synvert.net/img/logo_96.png" alt="logo" width="32" height="32" />
 
 [![Version](https://img.shields.io/npm/v/synvert.svg)](https://npmjs.org/package/synvert)
-[![AwesomeCode Status for xinminlabs/synvert-javascript](https://awesomecode.io/projects/a211af53-b83c-49e0-b12f-985463cbf297/status)](https://awesomecode.io/repos/xinminlabs/synvert-javascript)
+[![AwesomeCode Status for synvert-hq/synvert-javascript](https://awesomecode.io/projects/a211af53-b83c-49e0-b12f-985463cbf297/status)](https://awesomecode.io/repos/synvert-hq/synvert-javascript)
 
 `synvert-javascript` is a command tool to rewrite javascript code automatically, it depends on `synvert-core-javascript` and `synvert-snippets-javascript`.
 
-[synvert-core-javascript](https://github.com/xinminlabs/synvert-core-javascript) provides a set of DSLs to rewrite javascript code.
+[synvert-core-javascript](https://github.com/synvert-hq/synvert-core-javascript) provides a set of DSLs to rewrite javascript code.
 
-[synvert-snippets-javascript](https://github.com/xinminlabs/synvert-snippets-javascript) provides official snippets to rewrite javascript code.
+[synvert-snippets-javascript](https://github.com/synvert-hq/synvert-snippets-javascript) provides official snippets to rewrite javascript code.
 
 ## Installation
 
@@ -68,7 +68,7 @@ OPTIONS
 
 ### Sync snippets
 
-[Official Snippets](https://github.com/xinminlabs/synvert-snippets-javascript) are available on github,
+[Official Snippets](https://github.com/synvert-hq/synvert-snippets-javascript) are available on github,
 you can sync them any time you want.
 
 
@@ -105,13 +105,13 @@ $ synvert-javascript --run jquery/migrate
 Run a snippet from remote url.
 
 ```
-$ synvert-javascript --run https://raw.githubusercontent.com/xinminlabs/synvert-snippets-javascript/master/lib/javascript/no-useless-constructor.js
+$ synvert-javascript --run https://raw.githubusercontent.com/synvert-hq/synvert-snippets-javascript/master/lib/javascript/no-useless-constructor.js
 ```
 
 Run a snippet from local file.
 
 ```
-$ synvert-javascript --run ~/Sites/xinminlabs/synvert-snippets-javascript/lib/jquery/deprecate-event-shorthand.js
+$ synvert-javascript --run ~/Sites/synvert-hq/synvert-snippets-javascript/lib/jquery/deprecate-event-shorthand.js
 ```
 
 Show processing files when running a snippet.

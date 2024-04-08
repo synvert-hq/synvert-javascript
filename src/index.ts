@@ -12,7 +12,7 @@ import {
   testSnippet,
 } from "./command";
 
-const espree = require("@xinminlabs/espree");
+const espree = require("@synvert-hq/espree");
 
 class SynvertCommand extends Command {
   private format!: string;
