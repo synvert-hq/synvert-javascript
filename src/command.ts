@@ -6,7 +6,7 @@ import dedent from "dedent-js";
 import compareVersions from "compare-versions";
 import snakecaseKeys from "snakecase-keys";
 import fetch from "node-fetch";
-import * as Synvert from "synvert-core";
+import * as Synvert from "@synvert-hq/synvert-core";
 
 import { groupNameType, Snippet } from "./types";
 

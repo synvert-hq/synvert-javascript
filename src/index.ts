@@ -1,6 +1,5 @@
 import { Command, flags } from "@oclif/command";
-import * as Synvert from "synvert-core";
-import ts from "typescript";
+import * as Synvert from "@synvert-hq/synvert-core";
 
 import {
   syncSnippets,
