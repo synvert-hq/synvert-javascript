@@ -161,10 +161,11 @@ SynvertCommand.flags = {
     default: 2,
     description: "prefer tab width",
   }),
-  "loose": flags.boolean({
+  loose: flags.boolean({
     default: false,
-    description: "ignore npm version and npm version check, it uses strict mode by default",
-  })
+    description:
+      "ignore npm version and npm version check, it uses strict mode by default",
+  }),
 };
 
 module.exports = SynvertCommand;
