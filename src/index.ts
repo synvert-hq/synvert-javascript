@@ -56,6 +56,7 @@ class SynvertCommand extends Command {
     Synvert.Configuration.singleQuote = flags["single-quote"];
     Synvert.Configuration.semi = !flags["no-semi"];
     Synvert.Configuration.tabWidth = flags["tab-width"];
+    Synvert.Configuration.strict = !flags["loose"];
     if (flags.run) {
       const rewriter = await Synvert.evalSnippet(flags.run);
       await runSnippet(rewriter, this.format);
@@ -160,6 +161,10 @@ SynvertCommand.flags = {
     default: 2,
     description: "prefer tab width",
   }),
+  "loose": flags.boolean({
+    default: false,
+    description: "ignore npm version and npm version check, it uses strict mode by default",
+  })
 };
 
 module.exports = SynvertCommand;
