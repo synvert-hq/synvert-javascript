@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.16.0 (2024-04-24)
+
+* Update `@synvert-hq/synvert-core` to 2.20.0
+* Add `--loose` flag
+
 ## 1.15.3 (2024-04-08)
 
 * Update `synvert-core` to 2.19.3
