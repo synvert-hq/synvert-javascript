@@ -1,5 +1,5 @@
 import { Command, flags } from "@oclif/command";
-import * as Synvert from "@synvert-hq/synvert-core";
+import { Configuration, Rewriter, evalSnippet, rewriteSnippetToAsyncVersion, evaluateContent, version as synvertCoreVersion } from "@synvert-hq/synvert-core";
 
 import {
   syncSnippets,
@@ -36,33 +36,33 @@ class SynvertCommand extends Command {
       return await generateSnippet(flags.generate);
     }
     if (flags["show-run-process"]) {
-      Synvert.Configuration.showRunProcess = true;
+      Configuration.showRunProcess = true;
     }
     if (flags["root-path"]) {
-      Synvert.Configuration.rootPath = flags["root-path"];
+      Configuration.rootPath = flags["root-path"];
     }
     if (flags["only-paths"]) {
-      Synvert.Configuration.onlyPaths = flags["only-paths"]
+      Configuration.onlyPaths = flags["only-paths"]
         .split(",")
         .map((onlyPath: string) => onlyPath.trim());
     }
     if (flags["skip-paths"]) {
-      Synvert.Configuration.skipPaths = flags["skip-paths"]
+      Configuration.skipPaths = flags["skip-paths"]
         .split(",")
         .map((skipPath: string) => skipPath.trim());
     }
-    Synvert.Configuration.respectGitignore = !flags["dont-respect-gitignore"];
-    Synvert.Configuration.maxFileSize = flags["max-file-size"];
-    Synvert.Configuration.singleQuote = flags["single-quote"];
-    Synvert.Configuration.semi = !flags["no-semi"];
-    Synvert.Configuration.tabWidth = flags["tab-width"];
-    Synvert.Configuration.strict = !flags["loose"];
+    Configuration.respectGitignore = !flags["dont-respect-gitignore"];
+    Configuration.maxFileSize = flags["max-file-size"];
+    Configuration.singleQuote = flags["single-quote"];
+    Configuration.semi = !flags["no-semi"];
+    Configuration.tabWidth = flags["tab-width"];
+    Configuration.strict = !flags["loose"];
     if (flags.run) {
-      const rewriter = await Synvert.evalSnippet(flags.run);
+      const rewriter = await evalSnippet(flags.run);
       await runSnippet(rewriter, this.format);
     }
     if (flags.test) {
-      const rewriter = await Synvert.evalSnippet(flags.test);
+      const rewriter = await evalSnippet(flags.test);
       await testSnippet(rewriter);
     }
     if (flags.execute) {
@@ -79,11 +79,11 @@ class SynvertCommand extends Command {
   showVersion(): void {
     const pjson = require("../package.json");
     console.log(
-      `${pjson.version} (with @synvert-hq/synvert-core ${Synvert.version})`,
+      `${pjson.version} (with @synvert-hq/synvert-core ${synvertCoreVersion})`,
     );
   }
 
-  private async evalSnippetByInput(): Promise<Synvert.Rewriter<any>> {
+  private async evalSnippetByInput(): Promise<Rewriter<any>> {
     const snippet: string = await new Promise((resolve) => {
       let input = "";
       process.stdin.on("data", (data) => {
@@ -93,7 +93,7 @@ class SynvertCommand extends Command {
         resolve(input.toString());
       });
     });
-    return eval(Synvert.rewriteSnippetToAsyncVersion(snippet));
+    return evaluateContent(rewriteSnippetToAsyncVersion(snippet), "Rewriter");
   }
 }
 

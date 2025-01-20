@@ -6,7 +6,7 @@ import dedent from "dedent-js";
 import compareVersions from "compare-versions";
 import snakecaseKeys from "snakecase-keys";
 import fetch from "node-fetch";
-import * as Synvert from "@synvert-hq/synvert-core";
+import { Rewriter, rewriteSnippetToAsyncVersion, evaluateContent, version as synvertCoreVersion } from "@synvert-hq/synvert-core";
 
 import { groupNameType, Snippet } from "./types";
 
@@ -28,7 +28,7 @@ export async function syncSnippets(): Promise<void> {
     "https://registry.npmjs.org/@synvert-hq/synvert-core/latest",
   );
   const json = await response.json();
-  if (compareVersions.compare(json.version, Synvert.version, ">")) {
+  if (compareVersions.compare(json.version, synvertCoreVersion, ">")) {
     const { stdout } = await exec("npm root -g");
     await exec(
       `cd ${stdout.trim()}/synvert; npm install @synvert-hq/synvert-core@${json.version}`,
@@ -41,13 +41,13 @@ export async function readSnippets(): Promise<void> {
   await Promise.all(
     paths.map(async (path) => {
       const snippet = await fs.readFile(path, "utf-8");
-      eval(Synvert.rewriteSnippetToAsyncVersion(snippet));
+      evaluateContent(rewriteSnippetToAsyncVersion(snippet), "Rewriter");
     }),
   );
 }
 
 export async function listSnippets(format: string): Promise<void> {
-  const rewriters = Synvert.Rewriter.rewriters;
+  const rewriters = Rewriter.rewriters;
   if (format === "json") {
     console.log(JSON.stringify(snakecaseKeys(await availableSnippets())));
   } else {
@@ -66,7 +66,7 @@ export async function listSnippets(format: string): Promise<void> {
 }
 
 export async function availableSnippets(): Promise<Snippet[]> {
-  const rewriters = Synvert.Rewriter.rewriters;
+  const rewriters = Rewriter.rewriters;
   const groupNames: groupNameType[] = [];
   Object.keys(rewriters).map((group) => {
     Object.keys(rewriters[group]).map((name) => {
@@ -157,7 +157,7 @@ export async function generateSnippet(snippetName: string): Promise<void> {
 }
 
 export async function runSnippet(
-  rewriter: Synvert.Rewriter<any>,
+  rewriter: Rewriter<any>,
   format: string,
 ): Promise<void> {
   if (format === "json") {
@@ -178,7 +178,7 @@ export async function runSnippet(
 }
 
 export async function testSnippet(
-  rewriter: Synvert.Rewriter<any>,
+  rewriter: Rewriter<any>,
 ): Promise<void> {
   const result = await rewriter.test();
   console.log(JSON.stringify(snakecaseKeys(result)));
