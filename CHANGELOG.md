@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.16.1 (2025-01-20)
+
+* Update `@synvert-hq/synvert-core` to 2.22.0
+* Use `evaluateContent` to eval snippet
+
 ## 1.16.0 (2024-04-24)
 
 * Update `@synvert-hq/synvert-core` to 2.20.0
